@@ -21,32 +21,36 @@
         }
     </script>
     <style>
-        html {
-            scroll-padding-top: 8rem;
-        }
-
-        body {
-            padding-bottom: calc(6rem + env(safe-area-inset-bottom));
-        }
-
         button, a {
             min-height: 48px;
             touch-action: manipulation;
         }
 
-        button:focus-visible, a:focus-visible {
+        button:focus-visible, a:focus-visible, summary:focus-visible {
             outline: 3px solid #fbbf24;
             outline-offset: 3px;
         }
 
-        .emergency-dock {
-            padding-bottom: calc(0.75rem + env(safe-area-inset-bottom));
+        summary {
+            min-height: 48px;
+        }
+
+        summary::-webkit-details-marker {
+            display: none;
+        }
+
+        .accordion-toggle::after {
+            content: "開く";
+        }
+
+        details[open] .accordion-toggle::after {
+            content: "閉じる";
         }
     </style>
 </head>
 <body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col font-sans antialiased selection:bg-red-500 selection:text-white">
 
-    <!-- 常時固定の119番通報ヘッダー -->
+    <!-- 固定ヘッダー -->
     <header class="sticky top-0 z-50 bg-slate-900/95 backdrop-blur border-b border-slate-800 px-4 py-3 shadow-xl">
         <div class="max-w-6xl mx-auto flex items-center justify-between gap-4">
             <div class="flex items-center gap-3">
@@ -57,14 +61,11 @@
                     <p class="text-xs text-slate-300">通報時の住所: <span class="font-semibold">〒739-0046 広島県東広島市1丁目1 北体育館</span></p>
                 </div>
             </div>
-            <a href="tel:119" class="hidden sm:flex bg-red-600 hover:bg-red-700 text-white font-black px-5 py-2.5 rounded-xl shadow-lg items-center justify-center text-sm sm:text-base tracking-wide border border-red-400/40 transition-all">
-                119番通報
-            </a>
         </div>
     </header>
 
     <!-- タブ切り替えナビゲーション -->
-    <nav role="tablist" aria-label="対応画面" class="bg-slate-900/95 border-b border-slate-800 sticky top-[69px] z-40 backdrop-blur">
+    <nav role="tablist" aria-label="対応画面" class="bg-slate-900/95 border-b border-slate-800 sticky top-[60px] sm:top-[69px] z-40 backdrop-blur">
         <div class="max-w-6xl mx-auto px-4 py-2 flex gap-2">
             <button onclick="switchTab('triage')" id="tab-triage" role="tab" aria-controls="view-triage" aria-selected="true" class="flex-1 min-w-0 px-2 sm:flex-none sm:px-6 py-2.5 rounded-xl text-xs sm:text-sm leading-tight font-bold transition-all text-center flex items-center justify-center gap-2 bg-red-600 text-white shadow-lg">
                 緊急時の状態<br class="sm:hidden">チェック
@@ -153,130 +154,70 @@
                 </p>
             </div>
 
-            <!-- マニュアルカードグリッド -->
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <!-- マニュアル1：呼吸がない時の手当て -->
-                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-md flex flex-col justify-between">
-                    <div>
-                        <div class="flex items-center justify-between mb-3">
-                            <h3 class="font-bold text-sm sm:text-base text-red-200">
-                                呼吸がない時の手当てとAED
-                            </h3>
-                            <span class="text-xs bg-red-950 text-red-100 border border-red-500 px-3 py-1 rounded-full font-bold">緊急・赤</span>
-                        </div>
-                        <p class="text-sm text-slate-200 leading-relaxed mb-4">
-                            反応がなく、普段通りの呼吸がない、または判断できない場合は、すぐに119番とAED（電気ショックが必要か判断する機器）を手配して胸を押し始めます。しゃくりあげるような呼吸も、普段通りの呼吸ではありません。
-                        </p>
-                        <div class="space-y-2 text-sm bg-slate-950 p-4 rounded-xl border border-slate-700">
-                            <p class="font-semibold text-slate-100">手順</p>
-                            <ol class="list-decimal list-inside space-y-1.5 text-slate-200">
-                                <li>周囲の安全を確かめ、肩を軽くたたいて呼びかける。反応がなければ大声で助けを呼び、誰かに119番とAEDを頼む。</li>
-                                <li>胸やお腹の動きを10秒以内で見て呼吸を確かめる。普段通りでない、または判断できないときは胸を押し始める。</li>
-                                <li>胸の真ん中を、<strong class="text-red-200">1分間に100〜120回</strong>、<strong class="text-red-200">約5cm（6cmを超えない程度）</strong>沈む強さで押す。押すたびに胸が元に戻るようにし、救急隊に交代するまで続ける。</li>
-                                <li>AEDが届いたら電源を入れて音声案内に従う。電気ショックの時は誰も体に触れていないことを確認し、終わったらすぐ胸を押し続ける。</li>
-                            </ol>
-                            <p class="font-semibold text-red-200 mt-3">してはいけないこと</p>
-                            <ul class="list-disc list-inside space-y-1 text-slate-200">
-                                <li>反応がなく普段通りの呼吸がない人を、様子見だけにすること。</li>
-                                <li>AEDの音声案内中や胸を押している間に、必要以上に手を止めること。</li>
-                            </ul>
-                        </div>
+            <div class="space-y-3">
+                <details class="bg-slate-900 border border-slate-700 rounded-2xl shadow-md overflow-hidden">
+                    <summary class="list-none cursor-pointer select-none flex items-center justify-between gap-4 p-4 text-left text-base font-bold text-amber-100">
+                        <span>頭を打ったとき</span>
+                        <span class="accordion-toggle text-sm text-slate-300 font-semibold" aria-hidden="true"></span>
+                    </summary>
+                    <div class="border-t border-slate-700 p-4 sm:p-5 space-y-4 text-sm text-slate-200">
+                        <div><h3 class="font-bold text-slate-100 mb-1">どんな状態？</h3><p>頭痛、めまい、吐き気、ぼんやりする、覚えていないなど。頭を打った直後は平気でも、後から変化が出ることがあります。</p></div>
+                        <div><h3 class="font-bold text-slate-100 mb-1">どう対応する？</h3><p>練習をすぐにやめ、本人を一人にせず見守ってください。保護者や責任者に知らせ、病院などへ相談します。何度も吐く、意識が悪くなる、体がひきつけを起こす、急に悪化する場合は119番してください。</p></div>
+                        <div class="bg-amber-950 border border-amber-400 rounded-xl p-3"><h3 class="font-bold text-amber-100 mb-1">注意・してはいけないこと</h3><p>その日の練習に戻さないでください。本人だけで帰したり、一人にしたりしないでください。通常練習や試合への復帰は、症状がなくなった後に医師へ相談して決めます。</p></div>
                     </div>
-                </div>
+                </details>
 
-                <!-- マニュアル2：首・背中のケガ -->
-                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-md flex flex-col justify-between">
-                    <div>
-                        <div class="flex items-center justify-between mb-3">
-                            <h3 class="font-bold text-sm sm:text-base text-red-200">
-                                首・背中を痛めた可能性があるとき
-                            </h3>
-                            <span class="text-xs bg-red-950 text-red-100 border border-red-500 px-3 py-1 rounded-full font-bold">緊急・赤</span>
-                        </div>
-                        <p class="text-sm text-slate-200 leading-relaxed mb-4">
-                            高い所から落ちた、首や背中が強く痛む、手足がしびれる場合は、首や背中の大きなケガの可能性があります。動かさず119番してください。
-                        </p>
-                        <div class="space-y-2 text-sm bg-slate-950 p-4 rounded-xl border border-slate-700">
-                            <p class="font-semibold text-slate-100">手順</p>
-                            <ol class="list-decimal list-inside space-y-1.5 text-slate-200">
-                                <li>周囲の安全を確かめ、本人を起こしたり移動させたりせず、119番してください。</li>
-                                <li>本人が楽な姿勢のまま、頭が動かないよう両側を手でそっと支えます。無理に首をまっすぐにしないでください。</li>
-                                <li>呼吸と反応を見守り、変化があれば119番の指令員に伝えて指示に従います。普段通りの呼吸がなければ、首のケガが疑われても指令員の指示に従って胸を押し始めます。</li>
-                            </ol>
-                            <p class="font-semibold text-red-200 mt-3">してはいけないこと</p>
-                            <ul class="list-disc list-inside space-y-1 text-slate-200">
-                                <li>首を曲げたり、引っ張ったり、本人を起こしたりすること。</li>
-                                <li>頭の下に枕や衣類を入れて、首の角度を変えること。</li>
-                            </ul>
-                        </div>
+                <details class="bg-slate-900 border border-slate-700 rounded-2xl shadow-md overflow-hidden">
+                    <summary class="list-none cursor-pointer select-none flex items-center justify-between gap-4 p-4 text-left text-base font-bold text-red-100">
+                        <span>首・背中を打ったとき</span>
+                        <span class="accordion-toggle text-sm text-slate-300 font-semibold" aria-hidden="true"></span>
+                    </summary>
+                    <div class="border-t border-slate-700 p-4 sm:p-5 space-y-4 text-sm text-slate-200">
+                        <div><h3 class="font-bold text-slate-100 mb-1">どんな状態？</h3><p>高い所から落ちた、首や背中が強く痛む、手足がしびれる、力が入らない、動かせない場合は大きなケガの疑いがあります。</p></div>
+                        <div><h3 class="font-bold text-slate-100 mb-1">どう対応する？</h3><p>すぐ119番してください。本人を起こしたり移動させたりせず、見つけたときの姿勢のままにします。頭が動かないよう両側をそっと支え、呼吸と反応を見守ってください。呼吸が普段通りでなければ、指令員の指示に従って胸を押し始めます。</p></div>
+                        <div class="bg-red-950 border border-red-500 rounded-xl p-3"><h3 class="font-bold text-red-100 mb-1">注意・してはいけないこと</h3><p>首を曲げる、引っ張る、無理にまっすぐにする、本人を起こすことはしないでください。頭の下に枕や衣類を入れないでください。</p></div>
                     </div>
-                </div>
+                </details>
 
-                <!-- マニュアル3：頭を打った時の対応 -->
-                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-md flex flex-col justify-between">
-                    <div>
-                        <div class="flex items-center justify-between mb-3">
-                            <h3 class="font-bold text-sm sm:text-base text-amber-100">
-                                頭を打ったときの対応と練習復帰
-                            </h3>
-                            <span class="text-xs bg-amber-950 text-amber-100 border border-amber-400 px-3 py-1 rounded-full font-bold">注意・黄</span>
-                        </div>
-                        <p class="text-sm text-slate-200 leading-relaxed mb-4">
-                            頭を打った直後に平気そうでも、後から変化が出ることがあります。頭痛、吐き気、めまい、ぼんやりするなどがあれば練習をやめ、病院などに相談してください。意識が悪くなる、何度も吐く、体がひきつけを起こす、急に悪化する場合は119番してください。
-                        </p>
-                        <div class="space-y-2 text-sm bg-slate-950 p-4 rounded-xl border border-slate-700">
-                            <p class="font-semibold text-slate-100">練習に戻るときの目安</p>
-                            <ul class="space-y-1 text-slate-200">
-                                <li>症状がある間は運動せず、無理のない範囲で休む。</li>
-                                <li>症状がなくなってから、日常生活、軽い運動、体操の基礎練習、通常練習、試合の順に少しずつ戻る。</li>
-                                <li>各段階で症状が戻ったら運動をやめ、前の段階に戻って病院などに相談する。</li>
-                                <li>通常練習や試合に戻る前に、医師に相談して許可を得る。</li>
-                            </ul>
-                            <p class="font-semibold text-amber-100 mt-3">してはいけないこと</p>
-                            <ul class="list-disc list-inside space-y-1 text-slate-200">
-                                <li>打った当日に練習へ戻すことや、症状が残っているのに本人だけで復帰を決めること。</li>
-                            </ul>
-                        </div>
+                <details class="bg-slate-900 border border-slate-700 rounded-2xl shadow-md overflow-hidden">
+                    <summary class="list-none cursor-pointer select-none flex items-center justify-between gap-4 p-4 text-left text-base font-bold text-amber-100">
+                        <span>骨や関節を痛めたとき（骨折・脱臼の疑い）</span>
+                        <span class="accordion-toggle text-sm text-slate-300 font-semibold" aria-hidden="true"></span>
+                    </summary>
+                    <div class="border-t border-slate-700 p-4 sm:p-5 space-y-4 text-sm text-slate-200">
+                        <div><h3 class="font-bold text-slate-100 mb-1">どんな状態？</h3><p>強い痛みや腫れがある、形が変わっている、動かせない、骨が見えているなど。</p></div>
+                        <div><h3 class="font-bold text-slate-100 mb-1">どう対応する？</h3><p>無理に動かさず、本人が楽な姿勢で支えてください。骨が見える、出血が止まらない、痛みが強い場合は119番してください。それ以外も早めに病院などで診てもらいます。</p></div>
+                        <div class="bg-amber-950 border border-amber-400 rounded-xl p-3"><h3 class="font-bold text-amber-100 mb-1">注意・してはいけないこと</h3><p>骨や関節を引っ張って元に戻さないでください。骨が見えている場合は押し戻したり、骨の上を直接押したりしないでください。</p></div>
                     </div>
-                </div>
+                </details>
 
-                <!-- マニュアル4：骨折・脱臼・開放骨折 -->
-                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-md flex flex-col justify-between">
-                    <div>
-                        <div class="flex items-center justify-between mb-3">
-                            <h3 class="font-bold text-sm sm:text-base text-amber-100">
-                                骨折や関節のケガの手当て
-                            </h3>
-                            <span class="text-xs bg-amber-950 text-amber-100 border border-amber-400 px-3 py-1 rounded-full font-bold">注意・黄</span>
-                        </div>
-                        <p class="text-sm text-slate-200 leading-relaxed mb-4">
-                            骨や関節の形が変わっている、強く痛む、動かせない場合は、折れたり外れたりしている可能性があります。無理に動かさず、病院などで診てもらってください。出血が多い場合は119番してください。
-                        </p>
-                        <div class="space-y-2 text-sm bg-slate-950 p-4 rounded-xl border border-slate-700">
-                            <p class="font-semibold text-slate-100">手順</p>
-                            <ol class="list-decimal list-inside space-y-1.5 text-slate-200">
-                                <li>無理に動かさず、本人が楽な姿勢で休ませる。必要なら119番してください。</li>
-                                <li>出血している場合は、できれば手袋やビニール袋で手を覆い、清潔な布で傷口を押さえる。骨が見えている場合は、骨を押さず、周りを押さえて布で覆う。</li>
-                                <li>病院などで診てもらうまで、けがをした場所を動かさずに支える。添え木を使う場合は、痛みが増す・しびれる・色が悪くなるなら中止する。</li>
-                            </ol>
-                            <p class="font-semibold text-amber-100 mt-3">してはいけないこと</p>
-                            <ul class="list-disc list-inside space-y-1 text-slate-200">
-                                <li>骨や関節を引っ張って元に戻すこと。</li>
-                                <li>見えている骨を押し戻したり、骨が出ている傷口を直接強く押したりすること。</li>
-                            </ul>
-                        </div>
+                <details class="bg-slate-900 border border-slate-700 rounded-2xl shadow-md overflow-hidden">
+                    <summary class="list-none cursor-pointer select-none flex items-center justify-between gap-4 p-4 text-left text-base font-bold text-amber-100">
+                        <span>ねんざ・肉離れ</span>
+                        <span class="accordion-toggle text-sm text-slate-300 font-semibold" aria-hidden="true"></span>
+                    </summary>
+                    <div class="border-t border-slate-700 p-4 sm:p-5 space-y-4 text-sm text-slate-200">
+                        <div><h3 class="font-bold text-slate-100 mb-1">どんな状態？</h3><p>関節をひねった後の痛みや腫れ、筋肉の急な痛み、内出血、力が入りにくいなど。</p></div>
+                        <div><h3 class="font-bold text-slate-100 mb-1">どう対応する？</h3><p>運動をやめ、楽な姿勢で休ませてください。布で包んだ保冷剤などを当てて冷やします。腫れが強い、歩けない、痛みがひどい場合は病院などで診てもらってください。</p></div>
+                        <div class="bg-amber-950 border border-amber-400 rounded-xl p-3"><h3 class="font-bold text-amber-100 mb-1">注意・してはいけないこと</h3><p>痛みを我慢して練習を続けないでください。強く揉む、無理に伸ばす、無理やり動かすことは避けてください。しびれや急な悪化があれば119番してください。</p></div>
                     </div>
-                </div>
+                </details>
+
+                <details class="bg-slate-900 border border-slate-700 rounded-2xl shadow-md overflow-hidden">
+                    <summary class="list-none cursor-pointer select-none flex items-center justify-between gap-4 p-4 text-left text-base font-bold text-red-100">
+                        <span>切り傷・すり傷・出血</span>
+                        <span class="accordion-toggle text-sm text-slate-300 font-semibold" aria-hidden="true"></span>
+                    </summary>
+                    <div class="border-t border-slate-700 p-4 sm:p-5 space-y-4 text-sm text-slate-200">
+                        <div><h3 class="font-bold text-slate-100 mb-1">どんな状態？</h3><p>器具や床で皮膚が切れたり擦れたりした、血が出ている、傷口に異物が入っているなど。</p></div>
+                        <div><h3 class="font-bold text-slate-100 mb-1">どう対応する？</h3><p>少量の出血なら、流水で傷を洗い、清潔なガーゼや布で覆います。出血が多い場合は、できれば手袋やビニール袋で手を覆い、清潔な布で傷口を押さえて119番してください。</p></div>
+                        <div class="bg-red-950 border border-red-500 rounded-xl p-3"><h3 class="font-bold text-red-100 mb-1">注意・してはいけないこと</h3><p>血に素手で触れないでください。傷に刺さった物は抜かないでください。出血が止まらない、傷が深い、本人の具合が悪い場合は119番してください。</p></div>
+                    </div>
+                </details>
             </div>
         </section>
 
     </main>
-
-    <div class="emergency-dock fixed bottom-0 inset-x-0 z-[60] bg-slate-950/95 border-t border-red-500 px-4 pt-3 shadow-2xl">
-        <a href="tel:119" class="block max-w-6xl mx-auto bg-red-600 hover:bg-red-700 text-white font-black text-center text-base rounded-xl px-4 py-3 border border-red-300">
-            119番通報
-        </a>
-    </div>
 
     <script>
         const tabBaseClass = "flex-1 min-w-0 px-2 sm:flex-none sm:px-6 py-2.5 rounded-xl text-xs sm:text-sm leading-tight font-bold transition-all text-center flex items-center justify-center bg-slate-800 text-slate-300 hover:text-white hover:bg-slate-700";
@@ -518,10 +459,6 @@
             if (!data) {
                 throw new Error(`結果データがありません: ${conditionKey}`);
             }
-            const isEmergency = data.badgeText.includes('赤');
-            const contactTarget = isEmergency ? '119番' : '救急相談センター（#7119）';
-            const callOpening = isEmergency ? '救急車をお願いします。' : '症状について相談したいです。';
-
             const container = document.getElementById('wizard-container');
             const resultContainer = document.getElementById('result-container');
             container.classList.add('hidden');
@@ -546,12 +483,19 @@
                     </div>
 
                     <div class="space-y-2">
-                        <h3 class="text-base font-bold text-red-100">電話で伝えること（${contactTarget}）</h3>
+                        <h3 class="text-base font-bold text-red-100">通報のポイント</h3>
                         <div class="bg-red-950 border border-red-500 p-4 rounded-xl space-y-3 text-sm text-white">
-                            <p><strong>住所：</strong> <span class="font-bold">〒739-0046 広島県東広島市1丁目1 北体育館</span></p>
-                            <p><strong>伝え方の例：</strong></p>
-                            <p class="bg-slate-950 p-3 rounded-lg border border-slate-600 leading-relaxed">「${callOpening}場所は、〒739-0046 広島県東広島市1丁目1 北体育館です。状態チェックでは${data.title}（${data.badgeText}）と思われます。${data.callText}ケガをした人は${data.patientStatus}です。通報者の名前は〇〇です。」</p>
-                            <p class="text-red-100 font-bold">状態が急に悪くなった場合や、命に関わる症状がある場合は119番してください。</p>
+                            <p><strong>今回の確認結果：</strong>${data.title}（${data.badgeText}）</p>
+                            <p><strong>本人の状態：</strong>${data.patientStatus}</p>
+                            <p>${data.callText}</p>
+                            <ul class="list-disc list-inside space-y-2">
+                                <li>指令員の質問に、順番に答えてください。</li>
+                                <li>冷静に、短く、はっきり伝えてください。</li>
+                                <li><strong>住所：</strong>〒739-0046 広島県東広島市1丁目1 北体育館。体育館の中の場所、使う入口、近くの目印も伝えてください。</li>
+                                <li>けが人・病人の人数と状態、何が起きたか（体操の種目や事故の状況）、自分の名前と連絡のつく電話番号を伝えてください。</li>
+                                <li>通話は切らず、指令員の指示に従ってください。可能なら部員に入口で救急車を案内してもらい、救急隊を迎える準備をしてください。</li>
+                            </ul>
+                            <p class="text-red-100 font-bold">緊急時や急に悪化した場合は119番へ。緊急ではない相談は救急相談センター（#7119）も利用できます。</p>
                         </div>
                     </div>
 
