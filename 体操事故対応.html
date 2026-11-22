@@ -1,0 +1,877 @@
+<!DOCTYPE html>
+<html lang="ja" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>体操部 けが・急病の対応ナビ</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        slate: {
+                            950: '#020617',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        html {
+            scroll-padding-top: 8rem;
+        }
+
+        button, a {
+            min-height: 48px;
+            touch-action: manipulation;
+        }
+
+        button:focus-visible, a:focus-visible {
+            outline: 3px solid #fbbf24;
+            outline-offset: 3px;
+        }
+
+        .manual-toggle {
+            width: 100%;
+            min-height: 72px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            padding: 1rem 1.125rem;
+            color: #f8fafc;
+            background: linear-gradient(110deg, #172554, #0f172a 72%);
+            border: 1px solid #334155;
+            border-radius: 1rem;
+            text-align: left;
+            transition: border-color .2s, background-color .2s, box-shadow .2s;
+        }
+
+        .manual-toggle:hover,
+        .manual-toggle[aria-expanded="true"] {
+            border-color: #818cf8;
+            box-shadow: 0 0 0 1px rgba(129, 140, 248, .2);
+        }
+
+        .manual-chevron {
+            width: 2rem;
+            height: 2rem;
+            flex: 0 0 2rem;
+            display: grid;
+            place-items: center;
+            color: #c7d2fe;
+            background: rgba(99, 102, 241, .16);
+            border-radius: 9999px;
+            font-size: 1.25rem;
+            transition: transform .24s ease;
+        }
+
+        .manual-toggle[aria-expanded="true"] .manual-chevron {
+            transform: rotate(180deg);
+        }
+
+        .manual-panel {
+            display: grid;
+            grid-template-rows: 0fr;
+            transition: grid-template-rows .28s ease;
+        }
+
+        .manual-panel.is-open {
+            grid-template-rows: 1fr;
+        }
+
+        .manual-panel-inner {
+            min-height: 0;
+            overflow: hidden;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .manual-panel,
+            .manual-chevron {
+                transition: none;
+            }
+        }
+    </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col font-sans antialiased selection:bg-red-500 selection:text-white">
+
+    <header class="sticky top-0 z-50 bg-slate-900/95 backdrop-blur border-b border-slate-800 px-4 py-3 shadow-xl">
+        <div class="max-w-6xl mx-auto flex items-center justify-between gap-4">
+            <div class="flex items-center gap-3">
+                <div>
+                    <h1 class="text-sm sm:text-lg font-bold tracking-wider text-slate-100">
+                        体操部 けが・急病の対応ナビ
+                    </h1>
+                    <p class="text-xs text-slate-300">通報時の住所: <span class="font-semibold">〒739-0046 広島県東広島市1丁目1 北体育館 1階体操場</span></p>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- タブ切り替えナビゲーション -->
+    <nav role="tablist" aria-label="対応画面" class="bg-slate-900/95 border-b border-slate-800 sticky top-[69px] z-40 backdrop-blur">
+        <div class="max-w-6xl mx-auto px-4 py-2 flex gap-2">
+            <button onclick="switchTab('triage')" id="tab-triage" role="tab" aria-controls="view-triage" aria-selected="true" class="flex-1 min-w-0 px-2 sm:flex-none sm:px-6 py-2.5 rounded-xl text-xs sm:text-sm leading-tight font-bold transition-all text-center flex items-center justify-center gap-2 bg-red-600 text-white shadow-lg">
+                緊急時の状態<br class="sm:hidden">チェック
+            </button>
+            <button onclick="switchTab('manual')" id="tab-manual" role="tab" aria-controls="view-manual" aria-selected="false" class="flex-1 min-w-0 px-2 sm:flex-none sm:px-6 py-2.5 rounded-xl text-xs sm:text-sm leading-tight font-bold transition-all text-center flex items-center justify-center gap-2 bg-slate-800 text-slate-300 hover:text-white hover:bg-slate-700">
+                事故対応<br class="sm:hidden">マニュアル
+            </button>
+        </div>
+    </nav>
+
+    <!-- メインコンテンツ領域 -->
+    <main class="max-w-6xl mx-auto w-full p-4 sm:p-6 flex-1">
+
+        <!-- ================= タブ1：緊急時の状態チェックナビ ================= -->
+        <section id="view-triage" role="tabpanel" aria-labelledby="tab-triage" class="space-y-6">
+            
+            <!-- 上部インフォメーション＆進捗 -->
+            <div class="bg-slate-900/90 border border-slate-800 rounded-2xl p-4 sm:p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-md">
+                <div>
+                    <span id="step-indicator-text" class="text-xs font-bold text-red-400 uppercase tracking-widest block mb-1">ステップ 1 / 4 : 意識の確認</span>
+                    <h2 class="text-base sm:text-lg font-bold text-slate-100">緊急時の状態チェックと対応手順ナビ</h2>
+                </div>
+                <button onclick="resetWizard()" class="text-sm bg-slate-800 hover:bg-slate-700 text-slate-200 px-4 py-3 rounded-xl border border-slate-600 transition-all flex items-center justify-center font-semibold">
+                    最初からやり直す
+                </button>
+            </div>
+
+            <!-- PC用2カラムレイアウト -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <!-- 左側：質問ウィザード本体 -->
+                <div class="lg:col-span-2 space-y-4">
+                    <div id="wizard-container" class="space-y-4">
+                        <!-- JSで動的描画 -->
+                    </div>
+                    <div id="result-container" class="hidden space-y-4">
+                        <!-- 診断結果がここに表示されます -->
+                    </div>
+                </div>
+
+                <!-- 右側：ガイドパネル -->
+                <div class="space-y-4">
+                    <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-lg space-y-3">
+                        <h3 class="text-sm font-bold text-slate-100 uppercase tracking-wider">
+                            チェックのポイント
+                        </h3>
+                        <p class="text-sm text-slate-300 leading-relaxed">
+                            これは診断ではなく、初期対応の目安です。意識がない、呼吸がおかしい、大きな出血がある、判断に迷う場合は119番へ。安全を確認し、無理に動かさないでください。
+                        </p>
+                        <hr class="border-slate-800">
+                        <div class="space-y-2 text-sm text-white">
+                            <div class="flex items-center gap-2 bg-red-950 border border-red-500 rounded-lg p-2">
+                                <span class="font-black text-red-200">赤</span>
+                                <span><strong>緊急：</strong> すぐに119番・救命処置</span>
+                            </div>
+                            <div class="flex items-center gap-2 bg-amber-950 border border-amber-400 rounded-lg p-2">
+                                <span class="font-black text-amber-100">黄</span>
+                                <span><strong>注意：</strong> 無理をさせず、病院などへ相談</span>
+                            </div>
+                            <div class="flex items-center gap-2 bg-emerald-950 border border-emerald-400 rounded-lg p-2">
+                                <span class="font-black text-emerald-100">緑</span>
+                                <span><strong>軽い：</strong> けがの手当て。悪化したら病院などへ</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-red-950 border border-red-600 rounded-2xl p-5 shadow-lg space-y-2">
+                        <h3 class="text-sm font-bold text-red-200 uppercase tracking-wider">
+                            迷ったときの連絡先
+                        </h3>
+                        <p class="text-sm text-slate-200 leading-relaxed">
+                            判断に迷う場合や複数の症状が重なる場合は、ためらわずに119番通報してください。救急相談センター（#7119）も利用できますが、緊急時は119番を優先してください。
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= タブ2：学習用事故対応マニュアル ================= -->
+        <section id="view-manual" role="tabpanel" aria-labelledby="tab-manual" class="hidden space-y-5">
+            <div class="bg-slate-900/90 border border-slate-800 rounded-2xl p-4 sm:p-5 shadow-xl">
+                <h2 class="text-lg sm:text-xl font-bold text-slate-100 mb-1">事故対応マニュアル</h2>
+                <p class="text-sm text-slate-300 leading-relaxed">
+                    傷病名をタップすると、状態の見分け方と初期対応を確認できます。これは診断ではありません。意識や呼吸に異常がある、出血が多い、対応に迷う場合は119番してください。
+                </p>
+            </div>
+
+            <div class="space-y-3" aria-label="傷病別の対応一覧">
+                <article class="bg-slate-900 border border-slate-800 rounded-2xl shadow-md overflow-hidden">
+                    <h3>
+                        <button class="manual-toggle" type="button" aria-expanded="false" aria-controls="manual-panel-concussion" onclick="toggleManual(this)">
+                            <span class="text-base sm:text-lg font-bold">脳震盪（のうしんとう）</span>
+                            <span class="manual-chevron" aria-hidden="true">⌄</span>
+                        </button>
+                    </h3>
+                    <div class="manual-panel" id="manual-panel-concussion" aria-hidden="true" inert>
+                        <div class="manual-panel-inner">
+                            <div class="grid gap-3 p-3 sm:p-4">
+                                <div class="rounded-xl border border-sky-900 bg-slate-950 p-4">
+                                    <h4 class="mb-1 font-bold text-sky-200">どんな状態？</h4>
+                                    <p class="text-sm leading-relaxed text-slate-200">頭を打った後に、頭痛、めまい、吐き気、ぼんやりする、ふらつく、記憶があいまいになることがあります。体操では着地の失敗や器具からの落下で起こることがあります。すぐに症状が出ない場合もあります。</p>
+                                </div>
+                                <div class="rounded-xl border border-emerald-900 bg-slate-950 p-4">
+                                    <h4 class="mb-1 font-bold text-emerald-200">どう対応する？</h4>
+                                    <p class="text-sm leading-relaxed text-slate-200">すぐに練習を中止し、本人を一人にせず、保護者や責任者へ連絡します。頭を打ったことと症状を伝え、できるだけ早く医療機関を受診します。症状がなくなるまで休ませ、復帰は医師に相談して段階的に行います。</p>
+                                </div>
+                                <div class="rounded-xl border border-amber-900 bg-slate-950 p-4">
+                                    <h4 class="mb-1 font-bold text-amber-200">注意点</h4>
+                                    <p class="text-sm leading-relaxed text-slate-200">その日の練習や試合には戻さず、一人で帰らせないでください。一度でも意識を失った、何度も吐く、意識が悪くなる、けいれん、強い頭痛、急な悪化があればすぐ119番してください。</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="bg-slate-900 border border-slate-800 rounded-2xl shadow-md overflow-hidden">
+                    <h3>
+                        <button class="manual-toggle" type="button" aria-expanded="false" aria-controls="manual-panel-cervical" onclick="toggleManual(this)">
+                            <span class="text-base sm:text-lg font-bold">頸椎損傷（けいついそんしょう）</span>
+                            <span class="manual-chevron" aria-hidden="true">⌄</span>
+                        </button>
+                    </h3>
+                    <div class="manual-panel" id="manual-panel-cervical" aria-hidden="true" inert>
+                        <div class="manual-panel-inner">
+                            <div class="grid gap-3 p-3 sm:p-4">
+                                <div class="rounded-xl border border-sky-900 bg-slate-950 p-4">
+                                    <h4 class="mb-1 font-bold text-sky-200">どんな状態？</h4>
+                                    <p class="text-sm leading-relaxed text-slate-200">首の強い痛み、手足のしびれや力の入りにくさ、動かしにくさが出ることがあります。頭から落ちた、首を強く打った、着地に失敗した時などに起こることがあります。</p>
+                                </div>
+                                <div class="rounded-xl border border-emerald-900 bg-slate-950 p-4">
+                                    <h4 class="mb-1 font-bold text-emerald-200">どう対応する？</h4>
+                                    <p class="text-sm leading-relaxed text-slate-200">大きな声で助けを呼び、すぐ119番します。本人を起こしたり移動させたりせず、見つけた時の姿勢のまま、頭や首を動かさないようそっと見守ります。呼吸と反応を確認し、救急隊や指令員の指示に従います。</p>
+                                </div>
+                                <div class="rounded-xl border border-amber-900 bg-slate-950 p-4">
+                                    <h4 class="mb-1 font-bold text-amber-200">注意点</h4>
+                                    <p class="text-sm leading-relaxed text-slate-200">首をまっすぐに直す、曲げる、引っ張る、もむことはしないでください。普段通りの呼吸がない場合は、首のけがが疑われても119番の指示に従って救命処置を行います。</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="bg-slate-900 border border-slate-800 rounded-2xl shadow-md overflow-hidden">
+                    <h3>
+                        <button class="manual-toggle" type="button" aria-expanded="false" aria-controls="manual-panel-fracture" onclick="toggleManual(this)">
+                            <span class="text-base sm:text-lg font-bold">骨折</span>
+                            <span class="manual-chevron" aria-hidden="true">⌄</span>
+                        </button>
+                    </h3>
+                    <div class="manual-panel" id="manual-panel-fracture" aria-hidden="true" inert>
+                        <div class="manual-panel-inner">
+                            <div class="grid gap-3 p-3 sm:p-4">
+                                <div class="rounded-xl border border-sky-900 bg-slate-950 p-4">
+                                    <h4 class="mb-1 font-bold text-sky-200">どんな状態？</h4>
+                                    <p class="text-sm leading-relaxed text-slate-200">強い痛み、腫れ、あざ、変形、動かしにくさが出ることがあります。着地や落下、手をついた時などに起こりやすく、見た目だけでは判断できないこともあります。</p>
+                                </div>
+                                <div class="rounded-xl border border-emerald-900 bg-slate-950 p-4">
+                                    <h4 class="mb-1 font-bold text-emerald-200">どう対応する？</h4>
+                                    <p class="text-sm leading-relaxed text-slate-200">運動を止め、本人が楽な姿勢で休ませます。けがをした場所を動かさず、タオルなどでそっと支え、早めに医療機関で診てもらいます。傷がある時は清潔な布で覆い、出血が多ければ周りを押さえて119番します。</p>
+                                </div>
+                                <div class="rounded-xl border border-amber-900 bg-slate-950 p-4">
+                                    <h4 class="mb-1 font-bold text-amber-200">注意点</h4>
+                                    <p class="text-sm leading-relaxed text-slate-200">骨や手足の形を元に戻そうとしたり、無理に動かして確かめたりしないでください。骨が見える、出血が止まらない、しびれや色の変化がある、痛みがとても強い場合はすぐ119番してください。</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="bg-slate-900 border border-slate-800 rounded-2xl shadow-md overflow-hidden">
+                    <h3>
+                        <button class="manual-toggle" type="button" aria-expanded="false" aria-controls="manual-panel-dislocation" onclick="toggleManual(this)">
+                            <span class="text-base sm:text-lg font-bold">脱臼（だっきゅう）</span>
+                            <span class="manual-chevron" aria-hidden="true">⌄</span>
+                        </button>
+                    </h3>
+                    <div class="manual-panel" id="manual-panel-dislocation" aria-hidden="true" inert>
+                        <div class="manual-panel-inner">
+                            <div class="grid gap-3 p-3 sm:p-4">
+                                <div class="rounded-xl border border-sky-900 bg-slate-950 p-4">
+                                    <h4 class="mb-1 font-bold text-sky-200">どんな状態？</h4>
+                                    <p class="text-sm leading-relaxed text-slate-200">肩や指などの関節に強い痛みや腫れが出て、形がいつもと違う、動かせないことがあります。転倒して手をついた時や、器具から落ちた時などに起こることがあります。</p>
+                                </div>
+                                <div class="rounded-xl border border-emerald-900 bg-slate-950 p-4">
+                                    <h4 class="mb-1 font-bold text-emerald-200">どう対応する？</h4>
+                                    <p class="text-sm leading-relaxed text-slate-200">練習を止め、関節を動かさず、本人が楽な位置でタオルなどを使って支えます。布で包んだ保冷剤を当て、できるだけ早く医療機関で診てもらいます。</p>
+                                </div>
+                                <div class="rounded-xl border border-amber-900 bg-slate-950 p-4">
+                                    <h4 class="mb-1 font-bold text-amber-200">注意点</h4>
+                                    <p class="text-sm leading-relaxed text-slate-200">関節を押したり引いたりして戻そうとしないでください。手足がしびれる、冷たい、青白い、強い痛みが続く場合や、ほかにも大きなけががある場合はすぐ119番してください。</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="bg-slate-900 border border-slate-800 rounded-2xl shadow-md overflow-hidden">
+                    <h3>
+                        <button class="manual-toggle" type="button" aria-expanded="false" aria-controls="manual-panel-sprain" onclick="toggleManual(this)">
+                            <span class="text-base sm:text-lg font-bold">捻挫（ねんざ）</span>
+                            <span class="manual-chevron" aria-hidden="true">⌄</span>
+                        </button>
+                    </h3>
+                    <div class="manual-panel" id="manual-panel-sprain" aria-hidden="true" inert>
+                        <div class="manual-panel-inner">
+                            <div class="grid gap-3 p-3 sm:p-4">
+                                <div class="rounded-xl border border-sky-900 bg-slate-950 p-4">
+                                    <h4 class="mb-1 font-bold text-sky-200">どんな状態？</h4>
+                                    <p class="text-sm leading-relaxed text-slate-200">関節をひねった後に痛みや腫れ、あざが出ます。体操では着地で足首をひねる、手をついて手首をひねるなどして起こります。骨折と見分けにくいことがあります。</p>
+                                </div>
+                                <div class="rounded-xl border border-emerald-900 bg-slate-950 p-4">
+                                    <h4 class="mb-1 font-bold text-emerald-200">どう対応する？</h4>
+                                    <p class="text-sm leading-relaxed text-slate-200">運動を止めて休ませ、痛む関節を楽な位置で保ちます。布で包んだ保冷剤を15〜20分ほど当て、可能なら無理のない範囲で少し高くします。歩けない、痛みや腫れが強い場合は医療機関で診てもらいます。</p>
+                                </div>
+                                <div class="rounded-xl border border-amber-900 bg-slate-950 p-4">
+                                    <h4 class="mb-1 font-bold text-amber-200">注意点</h4>
+                                    <p class="text-sm leading-relaxed text-slate-200">痛みを我慢して練習を続けたり、腫れた場所を強くもんだりしないでください。変形、しびれ、冷たさ、色の変化がある場合はすぐ119番してください。冷やす時は氷を肌に直接当てないでください。</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="bg-slate-900 border border-slate-800 rounded-2xl shadow-md overflow-hidden">
+                    <h3>
+                        <button class="manual-toggle" type="button" aria-expanded="false" aria-controls="manual-panel-strain" onclick="toggleManual(this)">
+                            <span class="text-base sm:text-lg font-bold">肉離れ</span>
+                            <span class="manual-chevron" aria-hidden="true">⌄</span>
+                        </button>
+                    </h3>
+                    <div class="manual-panel" id="manual-panel-strain" aria-hidden="true" inert>
+                        <div class="manual-panel-inner">
+                            <div class="grid gap-3 p-3 sm:p-4">
+                                <div class="rounded-xl border border-sky-900 bg-slate-950 p-4">
+                                    <h4 class="mb-1 font-bold text-sky-200">どんな状態？</h4>
+                                    <p class="text-sm leading-relaxed text-slate-200">太ももやふくらはぎなどの筋肉に、急な痛みが走り、力が入りにくくなることがあります。助走や踏み切り、着地で強く力を入れた時に起こり、後から腫れやあざが出る場合もあります。</p>
+                                </div>
+                                <div class="rounded-xl border border-emerald-900 bg-slate-950 p-4">
+                                    <h4 class="mb-1 font-bold text-emerald-200">どう対応する？</h4>
+                                    <p class="text-sm leading-relaxed text-slate-200">すぐに動きを止め、痛む筋肉に力が入らない楽な姿勢で休ませます。布で包んだ保冷剤を当て、早めに医療機関へ相談します。歩くのが難しい場合は無理に移動させないでください。</p>
+                                </div>
+                                <div class="rounded-xl border border-amber-900 bg-slate-950 p-4">
+                                    <h4 class="mb-1 font-bold text-amber-200">注意点</h4>
+                                    <p class="text-sm leading-relaxed text-slate-200">痛む場所を強くもむ、無理に伸ばす、痛みを我慢して走ることは避けてください。痛みが強い、腫れやあざが広がる、足に体重をかけられない場合は医療機関で診てもらいます。</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="bg-slate-900 border border-slate-800 rounded-2xl shadow-md overflow-hidden">
+                    <h3>
+                        <button class="manual-toggle" type="button" aria-expanded="false" aria-controls="manual-panel-wound" onclick="toggleManual(this)">
+                            <span class="text-base sm:text-lg font-bold">裂傷・擦過傷（切り傷・すり傷）</span>
+                            <span class="manual-chevron" aria-hidden="true">⌄</span>
+                        </button>
+                    </h3>
+                    <div class="manual-panel" id="manual-panel-wound" aria-hidden="true" inert>
+                        <div class="manual-panel-inner">
+                            <div class="grid gap-3 p-3 sm:p-4">
+                                <div class="rounded-xl border border-sky-900 bg-slate-950 p-4">
+                                    <h4 class="mb-1 font-bold text-sky-200">どんな状態？</h4>
+                                    <p class="text-sm leading-relaxed text-slate-200">裂傷は皮膚が切れて開いた傷、擦過傷は床や器具で皮膚をこすってできた傷です。器具の角にぶつかる、着地で床にこすれるなどして起こり、出血や砂・ほこりの付着が見られます。</p>
+                                </div>
+                                <div class="rounded-xl border border-emerald-900 bg-slate-950 p-4">
+                                    <h4 class="mb-1 font-bold text-emerald-200">どう対応する？</h4>
+                                    <p class="text-sm leading-relaxed text-slate-200">可能なら手袋をし、清潔なガーゼや布で傷を押さえて止血します。出血が落ち着いたら傷をきれいな流水で洗い、清潔なもので覆います。刺さった物がある時は抜かず、その周りを押さえて受診してください。</p>
+                                </div>
+                                <div class="rounded-xl border border-amber-900 bg-slate-950 p-4">
+                                    <h4 class="mb-1 font-bold text-amber-200">注意点</h4>
+                                    <p class="text-sm leading-relaxed text-slate-200">血が多い、噴き出す、押さえても止まらない場合は119番してください。傷が深い・大きく開いている、汚れが取れない、顔や目の近くにある場合は早めに受診します。刺さった物を抜いたり、傷口を何度も触ったりしないでください。</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                <a href="https://jpn-gym.or.jp/coach/movie/" target="_blank" rel="noopener noreferrer" class="block min-h-20 rounded-2xl border border-indigo-400/50 bg-gradient-to-r from-indigo-950 to-slate-900 p-4 sm:p-5 shadow-lg transition hover:border-indigo-300 hover:bg-indigo-950">
+                    <span class="flex items-start justify-between gap-3">
+                        <span>
+                            <span class="block text-sm sm:text-base font-bold text-indigo-100">日本体操協会 公式安全対策・事故対応動画（外部サイト）</span>
+                            <span class="mt-2 block text-sm leading-relaxed text-slate-300">心停止の対処・外傷対応・搬送が必要な場合の公式解説動画をまとめて視聴できます</span>
+                        </span>
+                        <span class="pt-1 text-indigo-200" aria-hidden="true">↗</span>
+                    </span>
+                </a>
+                <a href="https://www.fukuda.co.jp/aed/about/howtouse/" target="_blank" rel="noopener noreferrer" class="block min-h-20 rounded-2xl border border-indigo-400/50 bg-gradient-to-r from-indigo-950 to-slate-900 p-4 sm:p-5 shadow-lg transition hover:border-indigo-300 hover:bg-indigo-950">
+                    <span class="flex items-start justify-between gap-3">
+                        <span>
+                            <span class="block text-sm sm:text-base font-bold text-indigo-100">AEDの使い方・心肺蘇生法（フクダ電子 公式サイト）</span>
+                            <span class="mt-2 block text-sm leading-relaxed text-slate-300">AEDが届くまでの対応動画と、胸骨圧迫（心肺蘇生）・AED使用手順を確認できます</span>
+                        </span>
+                        <span class="pt-1 text-indigo-200" aria-hidden="true">↗</span>
+                    </span>
+                </a>
+            </div>
+        </section>
+
+
+    </main>
+
+    <script>
+        const tabBaseClass = "flex-1 min-w-0 px-2 sm:flex-none sm:px-6 py-2.5 rounded-xl text-xs sm:text-sm leading-tight font-bold transition-all text-center flex items-center justify-center bg-slate-800 text-slate-300 hover:text-white hover:bg-slate-700";
+        const tabActiveClasses = {
+            triage: "bg-red-600 text-white shadow-lg",
+            manual: "bg-indigo-600 text-white shadow-lg"
+        };
+
+        function switchTab(tabName) {
+            const showTriage = tabName === 'triage';
+            document.getElementById('view-triage').classList.toggle('hidden', !showTriage);
+            document.getElementById('view-manual').classList.toggle('hidden', showTriage);
+
+            const tabTriage = document.getElementById('tab-triage');
+            const tabManual = document.getElementById('tab-manual');
+            tabTriage.className = `${tabBaseClass} ${showTriage ? tabActiveClasses.triage : ''}`;
+            tabManual.className = `${tabBaseClass} ${showTriage ? '' : tabActiveClasses.manual}`;
+            tabTriage.setAttribute('aria-selected', String(showTriage));
+            tabManual.setAttribute('aria-selected', String(!showTriage));
+        }
+
+        function toggleManual(button) {
+            const expanded = button.getAttribute('aria-expanded') === 'true';
+            const panel = document.getElementById(button.getAttribute('aria-controls'));
+            if (!panel) {
+                throw new Error(`アコーディオンの内容が見つかりません: ${button.getAttribute('aria-controls')}`);
+            }
+
+            button.setAttribute('aria-expanded', String(!expanded));
+            panel.setAttribute('aria-hidden', String(expanded));
+            panel.inert = expanded;
+            panel.classList.toggle('is-open', !expanded);
+        }
+
+        let triageState = {
+            step: 1,
+            answers: {}
+        };
+
+        const backButton = '<button onclick="prevStep()" class="w-full sm:w-auto text-sm text-slate-100 bg-slate-700 hover:bg-slate-600 px-4 py-3 rounded-xl border border-slate-500">前の質問に戻る</button>';
+        const unsureButton = (step) => `
+            <button onclick="handleAnswer(${step}, 'unsure')" class="w-full text-left bg-amber-950 border border-amber-400 p-4 rounded-xl transition-all">
+                <span class="font-bold text-amber-100 text-sm block">当てはまらない・判断できない</span>
+                <span class="text-sm text-slate-200 block mt-1">安全のため119番へ。迷ったら救急車を呼んでください。</span>
+            </button>`;
+
+        function renderWizard() {
+            const container = document.getElementById('wizard-container');
+            const resultContainer = document.getElementById('result-container');
+            const indicatorText = document.getElementById('step-indicator-text');
+
+            container.innerHTML = '';
+            resultContainer.classList.add('hidden');
+            container.classList.remove('hidden');
+
+            if (triageState.step === 1) {
+                indicatorText.innerText = "ステップ 1 / 4 : 反応の確認";
+                container.innerHTML = `
+                    <div class="bg-slate-900 border border-slate-700 rounded-2xl p-5 sm:p-6 shadow-xl space-y-4">
+                        <div class="space-y-2">
+                            <span class="text-xs bg-red-950 text-red-100 border border-red-500 px-3 py-1 rounded-full font-bold">まず確認</span>
+                            <h2 class="text-lg font-bold text-slate-100">呼びかけに反応しますか？</h2>
+                            <p class="text-sm text-slate-200 leading-relaxed">周囲の安全を確かめ、肩を軽くたたきながら大きな声で呼びかけます。反応がなければ、すぐ助けを呼んで呼吸を確認してください。</p>
+                        </div>
+                        <div class="grid grid-cols-1 gap-3">
+                            <button onclick="handleAnswer(1, 'no')" class="w-full min-h-16 text-left bg-red-950 border border-red-500 p-4 rounded-xl">
+                                <span class="font-bold text-red-100 text-base block">反応がない</span>
+                                <span class="text-sm text-slate-200 block mt-1">呼吸の確認へ進む。すぐに周囲へ助けを求める。</span>
+                            </button>
+                            <button onclick="handleAnswer(1, 'yes')" class="w-full min-h-16 text-left bg-slate-800 border border-slate-600 p-4 rounded-xl">
+                                <span class="font-bold text-slate-100 text-base block">反応がある</span>
+                                <span class="text-sm text-slate-200 block mt-1">呼吸の状態を確認する。</span>
+                            </button>
+                            ${unsureButton(1)}
+                        </div>
+                    </div>`;
+            } else if (triageState.step === 2) {
+                indicatorText.innerText = "ステップ 2 / 4 : 呼吸の確認";
+                container.innerHTML = `
+                    <div class="bg-slate-900 border border-slate-700 rounded-2xl p-5 sm:p-6 shadow-xl space-y-4">
+                        <div class="space-y-2">
+                            <span class="text-xs bg-red-950 text-red-100 border border-red-500 px-3 py-1 rounded-full font-bold">呼吸を確認</span>
+                            <h2 class="text-lg font-bold text-slate-100">普段通りの呼吸をしていますか？</h2>
+                            <p class="text-sm text-slate-200 leading-relaxed">胸やお腹の動きを10秒以内で見ます。しゃくりあげるような呼吸や、途切れ途切れの呼吸は普段通りではありません。</p>
+                        </div>
+                        <div class="grid grid-cols-1 gap-3">
+                            <button onclick="handleAnswer(2, 'abnormal')" class="w-full min-h-16 text-left bg-red-950 border border-red-500 p-4 rounded-xl">
+                                <span class="font-bold text-red-100 text-base block">呼吸がない・普段通りではない</span>
+                                <span class="text-sm text-slate-200 block mt-1">すぐに119番とAEDを手配し、胸を押し始める。</span>
+                            </button>
+                            <button onclick="handleAnswer(2, 'normal')" class="w-full min-h-16 text-left bg-slate-800 border border-slate-600 p-4 rounded-xl">
+                                <span class="font-bold text-slate-100 text-base block">普段通りに呼吸している</span>
+                                <span class="text-sm text-slate-200 block mt-1">${triageState.answers.step1 === 'no' ? '反応がないため、動かさず119番へ。' : 'ケガの場所を確認する。'}</span>
+                            </button>
+                            ${unsureButton(2)}
+                        </div>
+                        <div class="pt-1">${backButton}</div>
+                    </div>`;
+            } else if (triageState.step === 3) {
+                indicatorText.innerText = "ステップ 3 / 4 : ケガの場所";
+                container.innerHTML = `
+                    <div class="bg-slate-900 border border-slate-700 rounded-2xl p-5 sm:p-6 shadow-xl space-y-4">
+                        <div class="space-y-2">
+                            <span class="text-xs bg-amber-950 text-amber-100 border border-amber-400 px-3 py-1 rounded-full font-bold">ケガの確認</span>
+                            <h2 class="text-lg font-bold text-slate-100">一番強い痛みや大きなケガはどこですか？</h2>
+                            <p class="text-sm text-slate-200">複数ある場合は、最も危険と思うものを選んでください。</p>
+                        </div>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                            <button onclick="handleAnswer(3, 'head_spine')" class="w-full min-h-16 text-left bg-slate-800 border border-slate-600 p-4 rounded-xl">
+                                <span class="font-bold text-amber-100 text-base block">頭・首・背中を打った</span>
+                                <span class="text-sm text-slate-200 block mt-1">落下、頭痛、首の痛み、めまいなど</span>
+                            </button>
+                            <button onclick="handleAnswer(3, 'limb_severe')" class="w-full min-h-16 text-left bg-slate-800 border border-slate-600 p-4 rounded-xl">
+                                <span class="font-bold text-red-100 text-base block">手足の大きなケガ・出血</span>
+                                <span class="text-sm text-slate-200 block mt-1">骨が見える、形が変わった、血が止まらない</span>
+                            </button>
+                            <button onclick="handleAnswer(3, 'limb_moderate')" class="w-full min-h-16 text-left bg-slate-800 border border-slate-600 p-4 rounded-xl">
+                                <span class="font-bold text-amber-100 text-base block">手足や関節の強い痛み</span>
+                                <span class="text-sm text-slate-200 block mt-1">動かせない、腫れている、形が変わった</span>
+                            </button>
+                            <button onclick="handleAnswer(3, 'minor')" class="w-full min-h-16 text-left bg-slate-800 border border-slate-600 p-4 rounded-xl">
+                                <span class="font-bold text-emerald-100 text-base block">軽い擦り傷・打撲だけ</span>
+                                <span class="text-sm text-slate-200 block mt-1">意識がはっきりしていて、普段通りに動ける</span>
+                            </button>
+                            ${unsureButton(3)}
+                        </div>
+                        <div class="pt-1">${backButton}</div>
+                    </div>`;
+            } else if (triageState.step === 4) {
+                const branch = triageState.answers.step3;
+                let title = "";
+                let description = "";
+                let choices = "";
+
+                if (branch === 'head_spine') {
+                    title = "頭・首・背中の状態を確認";
+                    description = "首や背中の痛み、手足のしびれ、頭を打った後の変化を確認してください。";
+                    choices = `
+                        <button onclick="handleAnswer(4, 'spine_injury')" class="w-full min-h-16 text-left bg-red-950 border border-red-500 p-4 rounded-xl">
+                            <span class="font-bold text-red-100 text-base block">首・背中が強く痛む、手足がしびれる、動かせない</span>
+                            <span class="text-sm text-slate-200 block mt-1">動かさず119番。首や背中の大きなケガの疑い。</span>
+                        </button>
+                        <button onclick="handleAnswer(4, 'head_emergency')" class="w-full min-h-16 text-left bg-red-950 border border-red-500 p-4 rounded-xl">
+                            <span class="font-bold text-red-100 text-base block">頭を打ち、何度も吐く・悪化している・けいれんがある</span>
+                            <span class="text-sm text-slate-200 block mt-1">すぐに119番。</span>
+                        </button>
+                        <button onclick="handleAnswer(4, 'concussion')" class="w-full min-h-16 text-left bg-amber-950 border border-amber-400 p-4 rounded-xl">
+                            <span class="font-bold text-amber-100 text-base block">頭痛・めまい・吐き気・ぼんやりするなどの変化がある</span>
+                            <span class="text-sm text-slate-200 block mt-1">練習をやめ、病院などへ相談する。</span>
+                        </button>
+                        <button onclick="handleAnswer(4, 'head_impact')" class="w-full min-h-16 text-left bg-amber-950 border border-amber-400 p-4 rounded-xl">
+                            <span class="font-bold text-amber-100 text-base block">頭を打ったが、今は気になる症状がない</span>
+                            <span class="text-sm text-slate-200 block mt-1">練習には戻らず、周りの人が変化を見守る。</span>
+                        </button>`;
+                } else if (branch === 'limb_severe') {
+                    title = "手足の大きなケガを確認";
+                    description = "骨が見えるか、出血が止まらないかを確認してください。";
+                    choices = `
+                        <button onclick="handleAnswer(4, 'open_fracture')" class="w-full min-h-16 text-left bg-red-950 border border-red-500 p-4 rounded-xl">
+                            <span class="font-bold text-red-100 text-base block">骨が見える、または出血が止まらない</span>
+                            <span class="text-sm text-slate-200 block mt-1">すぐに119番。骨を押し戻さず、出血部位を押さえる。</span>
+                        </button>
+                        <button onclick="handleAnswer(4, 'fracture')" class="w-full min-h-16 text-left bg-amber-950 border border-amber-400 p-4 rounded-xl">
+                            <span class="font-bold text-amber-100 text-base block">骨は見えないが、形が変わった・強く痛む</span>
+                            <span class="text-sm text-slate-200 block mt-1">動かさず支え、すぐ病院などで診てもらう。</span>
+                        </button>`;
+                } else if (branch === 'limb_moderate') {
+                    title = "手足や関節の状態を確認";
+                    description = "形の変化、痛み、動かせるかを確認してください。";
+                    choices = `
+                        <button onclick="handleAnswer(4, 'fracture')" class="w-full min-h-16 text-left bg-amber-950 border border-amber-400 p-4 rounded-xl">
+                            <span class="font-bold text-amber-100 text-base block">形が変わった、強く痛む、動かせない</span>
+                            <span class="text-sm text-slate-200 block mt-1">骨や関節のケガの疑い。動かさず病院などで診てもらう。</span>
+                        </button>
+                        <button onclick="handleAnswer(4, 'unsure')" class="w-full min-h-16 text-left bg-amber-950 border border-amber-400 p-4 rounded-xl">
+                            <span class="font-bold text-amber-100 text-base block">それ以外・判断できない</span>
+                            <span class="text-sm text-slate-200 block mt-1">安全のため119番へ相談する。</span>
+                        </button>`;
+                }
+
+                indicatorText.innerText = "ステップ 4 / 4 : 状態の確認";
+                container.innerHTML = `
+                    <div class="bg-slate-900 border border-slate-700 rounded-2xl p-5 sm:p-6 shadow-xl space-y-4">
+                        <div class="space-y-2">
+                            <span class="text-xs bg-slate-700 text-slate-100 px-3 py-1 rounded-full font-bold">最後の確認</span>
+                            <h2 class="text-lg font-bold text-slate-100">${title}</h2>
+                            <p class="text-sm text-slate-200">${description}</p>
+                        </div>
+                        <div class="grid grid-cols-1 gap-3">${choices}${unsureButton(4)}</div>
+                        <div class="pt-1">${backButton}</div>
+                    </div>`;
+            }
+        }
+
+        function handleAnswer(step, value) {
+            if (step !== triageState.step) {
+                throw new Error(`回答ステップが一致しません: expected ${triageState.step}, got ${step}`);
+            }
+
+            triageState.answers[`step${step}`] = value;
+            for (let laterStep = step + 1; laterStep <= 4; laterStep++) {
+                delete triageState.answers[`step${laterStep}`];
+            }
+
+            if (value === 'unsure') {
+                showResult('uncertain');
+            } else if (step === 1) {
+                triageState.step = 2;
+                renderWizard();
+            } else if (step === 2) {
+                if (value === 'abnormal') {
+                    showResult('cardiac_arrest');
+                } else if (triageState.answers.step1 === 'no') {
+                    showResult('unconscious');
+                } else {
+                    triageState.step = 3;
+                    renderWizard();
+                }
+            } else if (step === 3) {
+                if (value === 'minor') {
+                    showResult('minor');
+                } else {
+                    triageState.step = 4;
+                    renderWizard();
+                }
+            } else if (step === 4) {
+                showResult(value);
+            }
+        }
+
+        function prevStep() {
+            if (triageState.step <= 1) {
+                return;
+            }
+
+            delete triageState.answers[`step${triageState.step}`];
+            triageState.step--;
+            for (let laterStep = triageState.step + 1; laterStep <= 4; laterStep++) {
+                delete triageState.answers[`step${laterStep}`];
+            }
+            renderWizard();
+        }
+
+        function resetWizard() {
+            triageState.step = 1;
+            triageState.answers = {};
+            renderWizard();
+        }
+
+        function showResult(conditionKey) {
+            const data = getResultData(conditionKey);
+            if (!data) {
+                throw new Error(`結果データがありません: ${conditionKey}`);
+            }
+            const container = document.getElementById('wizard-container');
+            const resultContainer = document.getElementById('result-container');
+            container.classList.add('hidden');
+            resultContainer.classList.remove('hidden');
+            document.getElementById('step-indicator-text').innerText = "状態チェック結果と対応";
+
+            resultContainer.innerHTML = `
+                <div class="bg-slate-900 border border-slate-700 rounded-2xl p-5 sm:p-6 shadow-xl space-y-6">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between border-b border-slate-700 pb-4 gap-3">
+                        <div>
+                            <span class="text-sm text-slate-200 block mb-1">状態チェック結果（診断ではありません）</span>
+                            <h2 class="text-xl font-bold text-slate-100">${data.title}</h2>
+                        </div>
+                        <span class="px-4 py-2 rounded-full text-sm font-black shadow-md text-center border-2 ${data.badgeClass}">${data.badgeText}</span>
+                    </div>
+
+                    <div class="space-y-2">
+                        <h3 class="text-base font-bold text-slate-100">対応の手順</h3>
+                        <ol class="list-decimal list-inside space-y-2 text-sm text-slate-100 bg-slate-950 p-4 rounded-xl border border-slate-700">
+                            ${data.steps.map((step) => `<li class="leading-relaxed">${step}</li>`).join('')}
+                        </ol>
+                    </div>
+
+                    <div class="space-y-2">
+                        <h3 class="text-base font-bold text-red-100">119番通報のポイント</h3>
+                        <div class="bg-red-950 border border-red-500 p-4 rounded-xl text-sm text-white">
+                            <ol class="list-decimal list-inside space-y-3">
+                                <li class="leading-relaxed"><strong>指令員の質問に順番に答える</strong><span class="block text-slate-200">自分から全部一気に話そうとせず、聞かれたことに一つずつ答える。</span></li>
+                                <li class="leading-relaxed"><strong>冷静に・短く・はっきり伝える</strong><span class="block text-slate-200">一呼吸おいて、結論から簡潔に話す。</span></li>
+                                <li class="leading-relaxed"><strong>住所をそのまま読み上げる</strong><span class="mt-2 block rounded-lg border border-amber-300 bg-slate-950 px-3 py-3 text-base font-black leading-relaxed text-amber-100">〒739-0046 広島県東広島市1丁目1 北体育館 1階体操場</span></li>
+                                <li class="leading-relaxed"><strong>スピーカーフォンを活用する</strong><span class="block text-slate-200">周囲の部員と指示を共有し、AED手配や入り口での誘導と連携する。</span></li>
+                                <li class="leading-relaxed"><strong>指令員の合図があるまで電話を切らない</strong><span class="block text-slate-200">到着までの処置指示や折り返し確認に備える。</span></li>
+                            </ol>
+                        </div>
+                    </div>
+
+                    <div class="space-y-2">
+                        <h3 class="text-base font-bold text-amber-100">してはいけないこと</h3>
+                        <ul class="list-disc list-inside space-y-2 text-sm text-amber-100 bg-amber-950 border border-amber-400 p-4 rounded-xl">
+                            ${data.taboos.map((taboo) => `<li class="leading-relaxed">${taboo}</li>`).join('')}
+                        </ul>
+                    </div>
+
+                    <div class="pt-2 flex flex-col sm:flex-row gap-3">
+                        ${triageState.step > 1 ? backButton : ''}
+                        <button onclick="resetWizard()" class="flex-1 bg-slate-700 hover:bg-slate-600 text-white font-bold px-4 py-3 rounded-xl text-sm border border-slate-500">
+                            最初からチェックをやり直す
+                        </button>
+                    </div>
+                </div>`;
+        }
+
+        function getResultData(key) {
+            const urgent = "bg-red-600 text-white border-red-200";
+            const caution = "bg-amber-300 text-slate-950 border-amber-100";
+            const minor = "bg-emerald-300 text-slate-950 border-emerald-100";
+            const results = {
+                cardiac_arrest: {
+                    title: "呼吸がない・普段通りでない",
+                    badgeText: "緊急・赤",
+                    badgeClass: urgent,
+                    steps: [
+                        "周囲に助けを求め、誰かに119番とAEDを頼む。通報はスピーカーにして指令員の指示を聞く。",
+                        "胸の真ん中を、1分間に100〜120回、約5cm沈む強さで押す。救急隊かAEDが来るまで続ける。",
+                        "AEDが届いたら電源を入れて音声案内に従う。電気ショックの後は、すぐに胸を押し始める。"
+                    ],
+                    taboos: [
+                        "様子見をして胸を押し始めるのを遅らせること。",
+                        "しゃくりあげるような呼吸を、普段通りの呼吸と考えること。"
+                    ]
+                },
+                unconscious: {
+                    title: "反応がないが、呼吸は普段通り",
+                    badgeText: "緊急・赤",
+                    badgeClass: urgent,
+                    steps: [
+                        "すぐ119番してください。電話をスピーカーにして、指令員の指示に従う。",
+                        "首や背中を打った可能性がある場合は、本人を動かさず、頭が動かないようそっと支える。",
+                        "呼吸と反応を見続け、呼吸が普段通りでなくなったら、指令員の指示に従って胸を押し始める。"
+                    ],
+                    taboos: [
+                        "意識が戻るか様子見をして、119番を遅らせること。",
+                        "首や背中のケガが疑われる人を、むやみに動かすこと。"
+                    ]
+                },
+                spine_injury: {
+                    title: "首・背中の大きなケガの疑い",
+                    badgeText: "緊急・赤",
+                    badgeClass: urgent,
+                    steps: [
+                        "すぐ119番し、落ちた高さや首・背中の痛み、手足のしびれを伝える。",
+                        "倒れたときの姿勢のまま、本人を動かさず、頭が動かないよう両側をそっと支える。",
+                        "呼吸と反応を見守り、変化があれば指令員へ伝えて指示に従う。"
+                    ],
+                    taboos: [
+                        "首や背中を曲げたり、引っ張ったり、本人を起こしたりすること。",
+                        "頭の下に枕や衣類を入れて首の角度を変えること。"
+                    ]
+                },
+                head_emergency: {
+                    title: "頭を打った後の強い異変",
+                    badgeText: "緊急・赤",
+                    badgeClass: urgent,
+                    steps: [
+                        "すぐ119番し、頭を打った時刻と、吐いた回数や症状の変化を伝える。",
+                        "本人を一人にせず、楽な姿勢で休ませる。首や背中も打った可能性があれば動かさない。",
+                        "呼吸と反応を見守り、変化があれば指令員に伝える。"
+                    ],
+                    taboos: [
+                        "本人だけで帰らせたり、一人にしたりすること。",
+                        "症状があるのに練習へ戻すこと。"
+                    ]
+                },
+                open_fracture: {
+                    title: "骨が見える・出血が止まらない",
+                    badgeText: "緊急・赤",
+                    badgeClass: urgent,
+                    steps: [
+                        "すぐ119番し、出血の量や骨が見えていることを伝える。",
+                        "できれば手袋やビニール袋で手を覆い、清潔な布で出血部位を押さえる。骨が見えている場合は、骨を避けて周りを押さえ、覆う。",
+                        "本人を休ませ、救急隊の到着まで出血と反応を見守る。"
+                    ],
+                    taboos: [
+                        "見えている骨を傷口の中へ押し戻すこと。",
+                        "骨が見えている場所を直接強く押したり、変形を元に戻したりすること。"
+                    ]
+                },
+                concussion: {
+                    title: "頭を打った後に症状がある",
+                    badgeText: "注意・黄",
+                    badgeClass: caution,
+                    steps: [
+                        "その日の練習や試合には戻さず、保護者や責任者に知らせる。",
+                        "本人を一人にせず、症状が悪くならないか見守る。早めに病院などへ相談する。",
+                        "何度も吐く、意識が悪くなる、体がひきつけを起こす、急に悪化する場合は119番する。"
+                    ],
+                    taboos: [
+                        "症状がある人を練習に戻すこと。",
+                        "本人だけに任せて、急な変化を見逃すこと。"
+                    ]
+                },
+                head_impact: {
+                    title: "頭を打ったが今は症状がない",
+                    badgeText: "注意・黄",
+                    badgeClass: caution,
+                    steps: [
+                        "その日の練習には戻さず、保護者や責任者に知らせる。",
+                        "一人にせず、頭痛、吐き気、めまい、ぼんやりするなどの変化がないか見守る。",
+                        "症状が出たら病院などへ相談し、急に悪化した場合は119番する。"
+                    ],
+                    taboos: [
+                        "症状がないことだけで安全と決めつけ、その日の練習に戻すこと。",
+                        "一人にして変化を確認しないこと。"
+                    ]
+                },
+                fracture: {
+                    title: "骨や関節のケガの疑い",
+                    badgeText: "注意・黄",
+                    badgeClass: caution,
+                    steps: [
+                        "けがをした場所を動かさず、本人が楽な姿勢で支える。",
+                        "骨が見える、出血が止まらない、痛みが強くなる場合は119番する。",
+                        "早めに病院などで診てもらう。"
+                    ],
+                    taboos: [
+                        "骨や関節を引っ張って元に戻すこと。",
+                        "痛みを我慢させて歩かせたり、練習を続けさせたりすること。"
+                    ]
+                },
+                minor: {
+                    title: "軽い打撲・擦り傷",
+                    badgeText: "軽い・緑",
+                    badgeClass: minor,
+                    steps: [
+                        "本人が楽な姿勢で休ませ、傷があれば水道水で洗い、清潔な布で覆う。",
+                        "打撲した場所は、布で包んだ保冷剤などで冷やす。冷やしすぎないよう皮膚を確認する。",
+                        "症状が強くなる、長引く、別の異変が出る場合は練習をやめ、病院などへ相談する。"
+                    ],
+                    taboos: [
+                        "痛みを我慢して練習を続け、ケガを悪化させること。",
+                        "状態が変化してもそのままにすること。"
+                    ]
+                },
+                uncertain: {
+                    title: "状態を判断できない・選択肢に当てはまらない",
+                    badgeText: "緊急・赤",
+                    badgeClass: urgent,
+                    steps: [
+                        "安全のため119番してください。電話をスピーカーにし、指令員の質問に答えて指示に従う。",
+                        "本人を一人にせず、呼吸と反応を見守る。危険な場所でなければ、むやみに動かさない。",
+                        "住所と、見たままの症状・変化を伝える。"
+                    ],
+                    taboos: [
+                        "判断できない状態を軽いケガと決めつけること。",
+                        "迷っている間に119番への連絡を遅らせること。"
+                    ]
+                }
+            };
+
+            return results[key];
+        }
+
+        renderWizard();
+    </script>
+</body>
+</html>
