@@ -391,6 +391,109 @@
                 </article>
             </div>
 
+            <article class="bg-slate-900 border border-slate-800 rounded-2xl shadow-md overflow-hidden">
+                <h3>
+                    <button class="manual-toggle" type="button" aria-expanded="false" aria-controls="clinic-panel" onclick="toggleManual(this)">
+                        <span class="text-base sm:text-lg font-bold">近隣の整形外科一覧</span>
+                        <span class="manual-chevron" aria-hidden="true">⌄</span>
+                    </button>
+                </h3>
+                <div class="manual-panel" id="clinic-panel" aria-hidden="true" inert>
+                    <div class="manual-panel-inner">
+                        <div class="space-y-4 p-3 sm:p-4">
+                            <div class="rounded-xl border border-amber-700 bg-amber-950/60 p-4">
+                                <h4 class="font-bold text-amber-100">電話をかけるときの確認2つ</h4>
+                                <ol class="mt-2 list-decimal space-y-1 pl-5 text-sm leading-relaxed text-slate-100">
+                                    <li>症状（例：体操中に肩や指を脱臼した、足首を強く捻ったなど）</li>
+                                    <li>今から向かえるか・受付は何時までか</li>
+                                </ol>
+                                <p class="mt-3 text-sm leading-relaxed text-amber-100">※営業中バッジは通常診療時間の目安です。受付終了の前倒し・休診・時間外対応の可否は必ず電話で確認してください。夜間・休日で対応先が見つからない場合や急変時は、救急安心センター（#7119）や119番に相談してください。</p>
+                            </div>
+
+                            <div class="grid gap-3 md:grid-cols-2" aria-label="近隣の整形外科6院">
+                                <article data-clinic-id="nozomi-saijo" class="rounded-xl border border-slate-700 bg-slate-950 p-4">
+                                    <div class="flex flex-wrap items-start justify-between gap-2">
+                                        <h4 class="font-bold text-slate-100">のぞみ整形外科クリニック西条</h4>
+                                        <span data-clinic-status class="shrink-0 rounded-full border px-3 py-1 text-xs font-bold" role="status" aria-live="polite">営業時間外</span>
+                                    </div>
+                                    <p class="mt-3 text-sm leading-relaxed text-slate-300"><strong class="text-slate-100">診療時間の目安：</strong>月〜金 8:30〜20:00 / 土 9:00〜17:00 / 日曜休診</p>
+                                    <p class="mt-1 text-sm leading-relaxed text-slate-300">〒739-0021 広島県東広島市西条町助実1182-1</p>
+                                    <div class="mt-3 flex flex-wrap gap-2">
+                                        <a class="inline-flex items-center justify-center rounded-lg border border-slate-600 bg-slate-800 px-3 py-2 text-sm font-semibold text-slate-100 hover:bg-slate-700" href="tel:0824226000">電話 082-422-6000</a>
+                                        <a class="inline-flex items-center justify-center rounded-lg border border-indigo-500/60 bg-indigo-950 px-3 py-2 text-sm font-semibold text-indigo-100 hover:bg-indigo-900" href="https://www.google.com/maps/search/?api=1&amp;query=%E3%81%AE%E3%81%9E%E3%81%BF%E6%95%B4%E5%BD%A2%E5%A4%96%E7%A7%91%E3%82%AF%E3%83%AA%E3%83%8B%E3%83%83%E3%82%AF%E8%A5%BF%E6%9D%A1%20%E3%80%92739-0021%20%E5%BA%83%E5%B3%B6%E7%9C%8C%E6%9D%B1%E5%BA%83%E5%B3%B6%E5%B8%82%E8%A5%BF%E6%9D%A1%E7%94%BA%E5%8A%A9%E5%AE%9F1182-1" target="_blank" rel="noopener noreferrer">Googleマップで開く ↗</a>
+                                    </div>
+                                </article>
+
+                                <article data-clinic-id="nozomi-jike" class="rounded-xl border border-slate-700 bg-slate-950 p-4">
+                                    <div class="flex flex-wrap items-start justify-between gap-2">
+                                        <h4 class="font-bold text-slate-100">のぞみ整形外科クリニック寺家</h4>
+                                        <span data-clinic-status class="shrink-0 rounded-full border px-3 py-1 text-xs font-bold" role="status" aria-live="polite">営業時間外</span>
+                                    </div>
+                                    <p class="mt-3 text-sm leading-relaxed text-slate-300"><strong class="text-slate-100">診療時間の目安：</strong>月〜金 9:00〜20:00 / 土 9:00〜17:00 / 日曜休診</p>
+                                    <p class="mt-1 text-sm leading-relaxed text-slate-300">〒739-0041 広島県東広島市西条町寺家4720</p>
+                                    <div class="mt-3 flex flex-wrap gap-2">
+                                        <a class="inline-flex items-center justify-center rounded-lg border border-slate-600 bg-slate-800 px-3 py-2 text-sm font-semibold text-slate-100 hover:bg-slate-700" href="tel:0824240009">電話 082-424-0009</a>
+                                        <a class="inline-flex items-center justify-center rounded-lg border border-indigo-500/60 bg-indigo-950 px-3 py-2 text-sm font-semibold text-indigo-100 hover:bg-indigo-900" href="https://www.google.com/maps/search/?api=1&amp;query=%E3%81%AE%E3%81%9E%E3%81%BF%E6%95%B4%E5%BD%A2%E5%A4%96%E7%A7%91%E3%82%AF%E3%83%AA%E3%83%8B%E3%83%83%E3%82%AF%E5%AF%BA%E5%AE%B6%20%E3%80%92739-0041%20%E5%BA%83%E5%B3%B6%E7%9C%8C%E6%9D%B1%E5%BA%83%E5%B3%B6%E5%B8%82%E8%A5%BF%E6%9D%A1%E7%94%BA%E5%AF%BA%E5%AE%B64720" target="_blank" rel="noopener noreferrer">Googleマップで開く ↗</a>
+                                    </div>
+                                </article>
+
+                                <article data-clinic-id="utanohara" class="rounded-xl border border-slate-700 bg-slate-950 p-4">
+                                    <div class="flex flex-wrap items-start justify-between gap-2">
+                                        <h4 class="font-bold text-slate-100">うたのはら整形外科クリニック</h4>
+                                        <span data-clinic-status class="shrink-0 rounded-full border px-3 py-1 text-xs font-bold" role="status" aria-live="polite">営業時間外</span>
+                                    </div>
+                                    <p class="mt-3 text-sm leading-relaxed text-slate-300"><strong class="text-slate-100">診療時間の目安：</strong>月〜金 9:00〜13:00, 15:00〜19:00 / 土 9:00〜13:00, 14:30〜17:30 / 日曜休診</p>
+                                    <p class="mt-1 text-sm leading-relaxed text-slate-300">〒739-0041 広島県東広島市西条町寺家5284-1</p>
+                                    <div class="mt-3 flex flex-wrap gap-2">
+                                        <a class="inline-flex items-center justify-center rounded-lg border border-slate-600 bg-slate-800 px-3 py-2 text-sm font-semibold text-slate-100 hover:bg-slate-700" href="tel:0824938130">電話 082-493-8130</a>
+                                        <a class="inline-flex items-center justify-center rounded-lg border border-indigo-500/60 bg-indigo-950 px-3 py-2 text-sm font-semibold text-indigo-100 hover:bg-indigo-900" href="https://www.google.com/maps/search/?api=1&amp;query=%E3%81%86%E3%81%9F%E3%81%AE%E3%81%AF%E3%82%89%E6%95%B4%E5%BD%A2%E5%A4%96%E7%A7%91%E3%82%AF%E3%83%AA%E3%83%8B%E3%83%83%E3%82%AF%20%E3%80%92739-0041%20%E5%BA%83%E5%B3%B6%E7%9C%8C%E6%9D%B1%E5%BA%83%E5%B3%B6%E5%B8%82%E8%A5%BF%E6%9D%A1%E7%94%BA%E5%AF%BA%E5%AE%B65284-1" target="_blank" rel="noopener noreferrer">Googleマップで開く ↗</a>
+                                    </div>
+                                </article>
+
+                                <article data-clinic-id="omori" class="rounded-xl border border-slate-700 bg-slate-950 p-4">
+                                    <div class="flex flex-wrap items-start justify-between gap-2">
+                                        <h4 class="font-bold text-slate-100">おおもり整形外科</h4>
+                                        <span data-clinic-status class="shrink-0 rounded-full border px-3 py-1 text-xs font-bold" role="status" aria-live="polite">営業時間外</span>
+                                    </div>
+                                    <p class="mt-3 text-sm leading-relaxed text-slate-300"><strong class="text-slate-100">診療時間の目安：</strong>月・火・水・金 9:00〜13:00, 15:00〜18:00 / 木・土 9:00〜13:00 / 日曜休診</p>
+                                    <p class="mt-1 text-sm leading-relaxed text-slate-300">〒739-0041 広島県東広島市西条町寺家1633</p>
+                                    <div class="mt-3 flex flex-wrap gap-2">
+                                        <a class="inline-flex items-center justify-center rounded-lg border border-slate-600 bg-slate-800 px-3 py-2 text-sm font-semibold text-slate-100 hover:bg-slate-700" href="tel:0824235885">電話 082-423-5885</a>
+                                        <a class="inline-flex items-center justify-center rounded-lg border border-indigo-500/60 bg-indigo-950 px-3 py-2 text-sm font-semibold text-indigo-100 hover:bg-indigo-900" href="https://www.google.com/maps/search/?api=1&amp;query=%E3%81%8A%E3%81%8A%E3%82%82%E3%82%8A%E6%95%B4%E5%BD%A2%E5%A4%96%E7%A7%91%20%E3%80%92739-0041%20%E5%BA%83%E5%B3%B6%E7%9C%8C%E6%9D%B1%E5%BA%83%E5%B3%B6%E5%B8%82%E8%A5%BF%E6%9D%A1%E7%94%BA%E5%AF%BA%E5%AE%B61633" target="_blank" rel="noopener noreferrer">Googleマップで開く ↗</a>
+                                    </div>
+                                </article>
+
+                                <article data-clinic-id="dohi" class="rounded-xl border border-slate-700 bg-slate-950 p-4">
+                                    <div class="flex flex-wrap items-start justify-between gap-2">
+                                        <h4 class="font-bold text-slate-100">土肥整形外科病院</h4>
+                                        <span data-clinic-status class="shrink-0 rounded-full border px-3 py-1 text-xs font-bold" role="status" aria-live="polite">営業時間外</span>
+                                    </div>
+                                    <p class="mt-3 text-sm leading-relaxed text-slate-300"><strong class="text-slate-100">診療時間の目安：</strong>月・火・木・金・土 8:30〜12:30 / 月・火・木・金 14:00〜17:30 / 水・日曜休診</p>
+                                    <p class="mt-1 text-sm leading-relaxed text-slate-300">〒739-0042 広島県東広島市西条町西条東1283-2</p>
+                                    <div class="mt-3 flex flex-wrap gap-2">
+                                        <a class="inline-flex items-center justify-center rounded-lg border border-slate-600 bg-slate-800 px-3 py-2 text-sm font-semibold text-slate-100 hover:bg-slate-700" href="tel:0824222156">電話 082-422-2156</a>
+                                        <a class="inline-flex items-center justify-center rounded-lg border border-indigo-500/60 bg-indigo-950 px-3 py-2 text-sm font-semibold text-indigo-100 hover:bg-indigo-900" href="https://www.google.com/maps/search/?api=1&amp;query=%E5%9C%9F%E8%82%A5%E6%95%B4%E5%BD%A2%E5%A4%96%E7%A7%91%E7%97%85%E9%99%A2%20%E3%80%92739-0042%20%E5%BA%83%E5%B3%B6%E7%9C%8C%E6%9D%B1%E5%BA%83%E5%B3%B6%E5%B8%82%E8%A5%BF%E6%9D%A1%E7%94%BA%E8%A5%BF%E6%9D%B11283-2" target="_blank" rel="noopener noreferrer">Googleマップで開く ↗</a>
+                                    </div>
+                                </article>
+
+                                <article data-clinic-id="higashihiroshima" class="rounded-xl border border-slate-700 bg-slate-950 p-4">
+                                    <div class="flex flex-wrap items-start justify-between gap-2">
+                                        <h4 class="font-bold text-slate-100">東広島整形外科クリニック</h4>
+                                        <span data-clinic-status class="shrink-0 rounded-full border px-3 py-1 text-xs font-bold" role="status" aria-live="polite">営業時間外</span>
+                                    </div>
+                                    <p class="mt-3 text-sm leading-relaxed text-slate-300"><strong class="text-slate-100">診療時間の目安：</strong>月〜金 9:00〜12:30, 15:00〜18:30 / 土 9:00〜12:30 ※土曜診療日は要確認 / 日曜休診</p>
+                                    <p class="mt-1 text-sm leading-relaxed text-slate-300">〒739-0024 広島県東広島市西条町御薗宇4281-1</p>
+                                    <div class="mt-3 flex flex-wrap gap-2">
+                                        <a class="inline-flex items-center justify-center rounded-lg border border-slate-600 bg-slate-800 px-3 py-2 text-sm font-semibold text-slate-100 hover:bg-slate-700" href="tel:0824313500">電話 082-431-3500</a>
+                                        <a class="inline-flex items-center justify-center rounded-lg border border-indigo-500/60 bg-indigo-950 px-3 py-2 text-sm font-semibold text-indigo-100 hover:bg-indigo-900" href="https://www.google.com/maps/search/?api=1&amp;query=%E6%9D%B1%E5%BA%83%E5%B3%B6%E6%95%B4%E5%BD%A2%E5%A4%96%E7%A7%91%E3%82%AF%E3%83%AA%E3%83%8B%E3%83%83%E3%82%AF%20%E3%80%92739-0024%20%E5%BA%83%E5%B3%B6%E7%9C%8C%E6%9D%B1%E5%BA%83%E5%B3%B6%E5%B8%82%E8%A5%BF%E6%9D%A1%E7%94%BA%E5%BE%A1%E8%96%97%E5%AE%874281-1" target="_blank" rel="noopener noreferrer">Googleマップで開く ↗</a>
+                                    </div>
+                                </article>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </article>
+
             <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
                 <a href="https://jpn-gym.or.jp/coach/movie/" target="_blank" rel="noopener noreferrer" class="block min-h-20 rounded-2xl border border-indigo-400/50 bg-gradient-to-r from-indigo-950 to-slate-900 p-4 sm:p-5 shadow-lg transition hover:border-indigo-300 hover:bg-indigo-950">
                     <span class="flex items-start justify-between gap-3">
@@ -448,6 +551,54 @@
             panel.inert = expanded;
             panel.classList.toggle('is-open', !expanded);
         }
+
+        const clinicSchedules = {
+            'nozomi-saijo': { weekdays: [1, 2, 3, 4, 5], weekdayHours: [[510, 1200]], saturdayHours: [[540, 1020]] },
+            'nozomi-jike': { weekdays: [1, 2, 3, 4, 5], weekdayHours: [[540, 1200]], saturdayHours: [[540, 1020]] },
+            utanohara: { weekdays: [1, 2, 3, 4, 5], weekdayHours: [[540, 780], [900, 1140]], saturdayHours: [[540, 780], [870, 1050]] },
+            omori: { weekdays: [1, 2, 3, 5], weekdayHours: [[540, 780], [900, 1080]], thursdayHours: [[540, 780]], saturdayHours: [[540, 780]] },
+            dohi: { weekdays: [1, 2, 4, 5], weekdayHours: [[510, 750], [840, 1050]], saturdayHours: [[510, 750]] },
+            higashihiroshima: { weekdays: [1, 2, 3, 4, 5], weekdayHours: [[540, 750], [900, 1110]], saturdayHours: [[540, 750]] }
+        };
+        const clinicStatusClasses = {
+            open: ['border-emerald-400', 'bg-emerald-950', 'text-emerald-100'],
+            closed: ['border-slate-600', 'bg-slate-800', 'text-slate-300']
+        };
+
+        function updateClinicStatuses(now = new Date()) {
+            const day = now.getDay();
+            const time = now.getHours() * 60 + now.getMinutes();
+
+            document.querySelectorAll('[data-clinic-id]').forEach((card) => {
+                const schedule = clinicSchedules[card.dataset.clinicId];
+                const status = card.querySelector('[data-clinic-status]');
+                if (!schedule || !status) {
+                    throw new Error(`診療時間または状態表示が見つかりません: ${card.dataset.clinicId}`);
+                }
+
+                let intervals = [];
+                if (day === 6) {
+                    intervals = schedule.saturdayHours || [];
+                } else if (schedule.weekdays.includes(day)) {
+                    intervals = schedule.weekdayHours;
+                } else if (day === 4 && schedule.thursdayHours) {
+                    intervals = schedule.thursdayHours;
+                }
+
+                const isOpen = intervals.some(([start, end]) => time >= start && time < end);
+                status.textContent = isOpen ? '営業中' : '営業時間外';
+                status.classList.remove(...clinicStatusClasses.open, ...clinicStatusClasses.closed);
+                status.classList.add(...clinicStatusClasses[isOpen ? 'open' : 'closed']);
+            });
+        }
+
+        updateClinicStatuses();
+        window.setInterval(updateClinicStatuses, 60_000);
+        document.addEventListener('visibilitychange', () => {
+            if (!document.hidden) {
+                updateClinicStatuses();
+            }
+        });
 
         let triageState = {
             step: 1,
