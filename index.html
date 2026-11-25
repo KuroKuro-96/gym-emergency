@@ -4,6 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>体操部 けが・急病の対応ナビ</title>
+    <meta name="theme-color" content="#09141b">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -21,8 +25,39 @@
         }
     </script>
     <style>
+        :root {
+            color-scheme: dark;
+            --page: #0b0f17;
+            --surface: #131a26;
+            --surface-raised: #182231;
+            --surface-inset: #0e141e;
+            --text: #f1f5f9;
+            --muted: #a7b3c2;
+            --subtle: #748296;
+            --accent: #73d5d0;
+            --danger: #dc3150;
+            --ease: cubic-bezier(.22, 1, .36, 1);
+        }
+
         html {
-            scroll-padding-top: 8rem;
+            scroll-padding-top: 9rem;
+            background: var(--page);
+        }
+
+        body {
+            min-height: 100vh;
+            color: var(--text) !important;
+            background:
+                radial-gradient(ellipse at 50% -24rem, rgba(48, 83, 112, .22), transparent 62%),
+                var(--page) !important;
+            font-family: "Plus Jakarta Sans", "Noto Sans JP", sans-serif !important;
+            font-size: 15px;
+            line-height: 1.75;
+            letter-spacing: .005em;
+        }
+
+        body, button, a {
+            -webkit-tap-highlight-color: transparent;
         }
 
         button, a {
@@ -30,54 +65,394 @@
             touch-action: manipulation;
         }
 
+        button {
+            font: inherit;
+        }
+
         button:focus-visible, a:focus-visible {
-            outline: 3px solid #fbbf24;
-            outline-offset: 3px;
+            outline: 3px solid #7ddbd5;
+            outline-offset: 4px;
+        }
+
+        h1, h2, h3, h4 {
+            color: var(--text);
+            font-weight: 750 !important;
+            letter-spacing: -.02em;
+            line-height: 1.45;
+        }
+
+        p, li {
+            line-height: 1.75 !important;
+        }
+
+        strong {
+            font-weight: 700;
+        }
+
+        hr {
+            height: 1px;
+            border: 0;
+            background: linear-gradient(90deg, rgba(148, 163, 184, .24), transparent);
+        }
+
+        ::selection {
+            color: #fff;
+            background: rgba(220, 49, 80, .72);
+        }
+
+        .max-w-6xl {
+            max-width: 76rem;
+        }
+
+        header.sticky {
+            background: rgba(11, 15, 23, .9) !important;
+            box-shadow: 0 1px 0 rgba(255, 255, 255, .035);
+            backdrop-filter: blur(22px);
+            -webkit-backdrop-filter: blur(22px);
+        }
+
+        header > div {
+            min-height: 68px;
+        }
+
+        header h1 {
+            font-size: 1rem !important;
+            letter-spacing: -.025em;
+        }
+
+        header p {
+            margin-top: .2rem;
+            color: var(--muted) !important;
+            font-size: .73rem !important;
+            line-height: 1.55 !important;
+        }
+
+        header p span {
+            color: #dce5ef;
+            font-variant-numeric: tabular-nums;
+        }
+
+        nav[role="tablist"] {
+            top: 94px;
+            background: rgba(11, 15, 23, .9) !important;
+            box-shadow: 0 1px 0 rgba(255, 255, 255, .035);
+            backdrop-filter: blur(22px);
+            -webkit-backdrop-filter: blur(22px);
+        }
+
+        nav[role="tablist"] > div {
+            gap: .55rem;
+            padding-top: .65rem;
+            padding-bottom: .65rem;
+        }
+
+        nav[role="tablist"] button {
+            min-height: 46px;
+            border: 0;
+            border-radius: .9rem;
+            color: #aab6c5;
+            background: transparent !important;
+            box-shadow: none !important;
+            font-size: .82rem !important;
+            letter-spacing: .005em;
+            transition: color .28s var(--ease), background .28s var(--ease), box-shadow .28s var(--ease), transform .28s var(--ease);
+        }
+
+        nav[role="tablist"] button:hover {
+            color: #fff;
+            background: rgba(255, 255, 255, .055) !important;
+        }
+
+        nav[role="tablist"] button[aria-selected="true"] {
+            color: #fff;
+            background: #222d3c !important;
+            box-shadow: inset 0 -2px 0 #7bd5d0 !important;
+        }
+
+        #tab-triage[aria-selected="true"] {
+            box-shadow: inset 0 -2px 0 var(--danger) !important;
+        }
+
+        main {
+            padding-top: 1.65rem !important;
+            padding-bottom: 4rem !important;
+        }
+
+        #view-triage:not(.hidden),
+        #view-manual:not(.hidden) {
+            animation: panel-arrive .42s var(--ease) both;
+        }
+
+        @keyframes panel-arrive {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        [class~="bg-slate-900"],
+        [class~="bg-slate-900/90"] {
+            background-color: var(--surface) !important;
+        }
+
+        [class~="bg-slate-950"] {
+            background-color: var(--surface-inset) !important;
+        }
+
+        [class~="bg-slate-800"],
+        [class~="bg-slate-700"] {
+            background-color: var(--surface-raised) !important;
+        }
+
+        body.bg-slate-950 {
+            background-color: var(--page) !important;
+        }
+
+        [class~="bg-red-950"] {
+            background: linear-gradient(145deg, rgba(117, 28, 48, .64), rgba(54, 22, 34, .82)) !important;
+        }
+
+        [class~="bg-red-600"] {
+            background-color: #a51f3b !important;
+        }
+
+        [class~="bg-amber-950"] {
+            background-color: #302719 !important;
+        }
+
+        [class~="bg-emerald-950"] {
+            background-color: #142c29 !important;
+        }
+
+        [class~="bg-indigo-950"] {
+            background-color: #1b2032 !important;
+        }
+
+        [class~="bg-gradient-to-r"] {
+            background-image: linear-gradient(120deg, #172231, #131a26 75%) !important;
+        }
+
+        [class*="border-"] {
+            border-color: transparent !important;
+        }
+
+        [class~="text-slate-100"],
+        [class~="text-white"] {
+            color: #f1f5f9 !important;
+        }
+
+        [class~="text-slate-200"] {
+            color: #d3dce7 !important;
+        }
+
+        [class~="text-slate-300"] {
+            color: #aab6c5 !important;
+        }
+
+        [class~="text-slate-950"] {
+            color: #101722 !important;
+        }
+
+        [class~="text-red-100"],
+        [class~="text-red-200"] {
+            color: #ffd9df !important;
+        }
+
+        [class~="text-red-400"] {
+            color: #ff8296 !important;
+        }
+
+        [class~="text-amber-100"],
+        [class~="text-amber-200"] {
+            color: #f5dfb2 !important;
+        }
+
+        [class~="text-emerald-100"],
+        [class~="text-emerald-200"] {
+            color: #b7e7d3 !important;
+        }
+
+        #view-triage > div:first-child {
+            align-items: center;
+            padding: 1.1rem 1.35rem !important;
+            border-radius: 1.1rem;
+            background: linear-gradient(115deg, #151e2b, #111821) !important;
+            box-shadow: 0 12px 32px rgba(0, 0, 0, .14) !important;
+        }
+
+        #step-indicator-text {
+            color: #f28a9b !important;
+            font-family: "Plus Jakarta Sans", "Noto Sans JP", sans-serif;
+            font-size: .7rem;
+            letter-spacing: .075em;
+            font-variant-numeric: tabular-nums;
+        }
+
+        #view-triage > div:first-child h2,
+        #view-manual > div:first-child h2 {
+            font-size: 1.1rem !important;
+        }
+
+        #view-triage > div:first-child button,
+        #wizard-container button[onclick="prevStep()"],
+        #result-container button[onclick="prevStep()"] {
+            border: 0 !important;
+            color: #d8e1eb !important;
+            background: #202b39 !important;
+            transition: background .24s var(--ease), transform .24s var(--ease);
+        }
+
+        #view-triage > div:first-child button:hover,
+        #wizard-container button[onclick="prevStep()"]:hover,
+        #result-container button[onclick="prevStep()"]:hover {
+            background: #293849 !important;
+            transform: translateY(-1px);
+        }
+
+        #wizard-container > div,
+        #result-container > div {
+            padding: clamp(1.25rem, 3vw, 2rem) !important;
+            border: 0 !important;
+            border-radius: 1.35rem;
+            background: linear-gradient(145deg, #151e2b, #111821) !important;
+            box-shadow: 0 22px 58px rgba(0, 0, 0, .2) !important;
+        }
+
+        #wizard-container h2,
+        #result-container h2 {
+            font-size: clamp(1.15rem, 2.2vw, 1.5rem) !important;
+            letter-spacing: -.025em;
+        }
+
+        #wizard-container button:not([onclick="prevStep()"]),
+        #result-container button:not([onclick="prevStep()"]) {
+            min-height: 74px;
+            padding: 1rem 1.15rem !important;
+            border: 0 !important;
+            border-radius: .95rem !important;
+            background-color: #1a2533 !important;
+            box-shadow: inset 3px 0 0 rgba(125, 150, 177, .38);
+            transition: background .25s var(--ease), box-shadow .25s var(--ease), transform .25s var(--ease);
+        }
+
+        #wizard-container button:not([onclick="prevStep()"]):hover,
+        #result-container button:not([onclick="prevStep()"]):hover {
+            background-color: #202e3e !important;
+            box-shadow: inset 3px 0 0 #79d5d0, 0 10px 24px rgba(0, 0, 0, .16);
+            transform: translateY(-2px);
+        }
+
+        #wizard-container button[class~="bg-red-950"],
+        #result-container button[class~="bg-red-950"] {
+            background: linear-gradient(110deg, #8b1e37, #561d2c) !important;
+            box-shadow: inset 3px 0 0 #f47789, 0 9px 26px rgba(188, 31, 65, .19);
+        }
+
+        #wizard-container button[class~="bg-red-950"]:hover,
+        #result-container button[class~="bg-red-950"]:hover {
+            background: linear-gradient(110deg, #a12240, #692034) !important;
+            box-shadow: inset 3px 0 0 #ff9aa8, 0 12px 30px rgba(220, 38, 72, .24);
+        }
+
+        #wizard-container button[class~="bg-amber-950"] {
+            background: #30291f !important;
+            box-shadow: inset 3px 0 0 #d9ad62;
+        }
+
+        #wizard-container button[class~="bg-emerald-950"] {
+            background: #172d29 !important;
+            box-shadow: inset 3px 0 0 #5db798;
+        }
+
+        #result-container ol,
+        #result-container ul {
+            border: 0 !important;
+            border-radius: .95rem;
+            background: #0d141e !important;
+        }
+
+        #result-container .text-xl + span {
+            background-color: #a51f3b !important;
+            border: 0 !important;
+            box-shadow: 0 0 24px rgba(220, 38, 72, .18);
+        }
+
+        #view-triage > .grid > div:last-child > div {
+            padding: 1.25rem !important;
+            border: 0 !important;
+            border-radius: 1.1rem;
+            background-color: var(--surface) !important;
+            box-shadow: 0 12px 32px rgba(0, 0, 0, .13);
+        }
+
+        #view-triage > .grid > div:last-child > div:last-child {
+            background: linear-gradient(135deg, #311b25, #211720) !important;
+            box-shadow: inset 3px 0 0 #d83a55, 0 12px 32px rgba(0, 0, 0, .16);
+        }
+
+        #view-manual > div:first-child {
+            padding: 1.25rem 1.4rem !important;
+            border: 0 !important;
+            border-radius: 1.1rem;
+            background: linear-gradient(120deg, #151e2b, #111821) !important;
+            box-shadow: 0 12px 32px rgba(0, 0, 0, .14) !important;
+        }
+
+        #view-manual > div:first-child p {
+            max-width: 68rem;
         }
 
         .manual-toggle {
             width: 100%;
-            min-height: 72px;
+            min-height: 76px;
             display: flex;
             align-items: center;
             justify-content: space-between;
             gap: 1rem;
-            padding: 1rem 1.125rem;
-            color: #f8fafc;
-            background: linear-gradient(110deg, #172554, #0f172a 72%);
-            border: 1px solid #334155;
-            border-radius: 1rem;
+            padding: 1.15rem 1.35rem;
+            border: 0 !important;
+            border-radius: 1.05rem;
+            color: var(--text);
+            background: #151e2b !important;
             text-align: left;
-            transition: border-color .2s, background-color .2s, box-shadow .2s;
+            transition: background .28s var(--ease), transform .28s var(--ease), border-radius .28s var(--ease);
         }
 
         .manual-toggle:hover,
         .manual-toggle[aria-expanded="true"] {
-            border-color: #818cf8;
-            box-shadow: 0 0 0 1px rgba(129, 140, 248, .2);
+            background: #1a2635 !important;
+        }
+
+        .manual-toggle[aria-expanded="true"] {
+            border-radius: 1.05rem 1.05rem .55rem .55rem;
+        }
+
+        .manual-toggle > span:first-child {
+            font-size: 1rem !important;
+            font-weight: 700;
+            letter-spacing: -.015em;
         }
 
         .manual-chevron {
-            width: 2rem;
-            height: 2rem;
-            flex: 0 0 2rem;
+            width: 2.25rem;
+            height: 2.25rem;
+            flex: 0 0 2.25rem;
             display: grid;
             place-items: center;
-            color: #c7d2fe;
-            background: rgba(99, 102, 241, .16);
+            color: #b9c9d8;
+            background: rgba(255, 255, 255, .06);
             border-radius: 9999px;
-            font-size: 1.25rem;
-            transition: transform .24s ease;
+            transition: transform .36s var(--ease), background .28s var(--ease), color .28s var(--ease);
         }
 
         .manual-toggle[aria-expanded="true"] .manual-chevron {
+            color: #82dad4;
+            background: rgba(115, 213, 208, .12);
             transform: rotate(180deg);
         }
 
         .manual-panel {
             display: grid;
             grid-template-rows: 0fr;
-            transition: grid-template-rows .28s ease;
+            transition: grid-template-rows .42s cubic-bezier(.22, 1, .36, 1);
         }
 
         .manual-panel.is-open {
@@ -89,10 +464,1079 @@
             overflow: hidden;
         }
 
+        .manual-panel .grid.gap-3,
+        .manual-panel > .manual-panel-inner > .space-y-4 {
+            gap: .65rem !important;
+            padding: .8rem 1.05rem 1.1rem !important;
+        }
+
+        .manual-panel .grid.gap-3 > div,
+        .manual-panel .space-y-4 > div {
+            padding: 1rem 1.15rem !important;
+            border: 0 !important;
+            border-radius: .85rem;
+            background: #0f1722 !important;
+        }
+
+        .manual-panel h4 {
+            margin-bottom: .35rem;
+            font-size: .88rem;
+            letter-spacing: -.01em;
+        }
+
+        [data-clinic-id] {
+            padding: 1.1rem !important;
+            border: 0 !important;
+            border-radius: 1rem;
+            background: #121b27 !important;
+            transition: background .25s var(--ease), transform .25s var(--ease);
+        }
+
+        [data-clinic-id]:hover {
+            background: #182332 !important;
+            transform: translateY(-2px);
+        }
+
+        [data-clinic-id] p,
+        #result-container li {
+            font-variant-numeric: tabular-nums;
+        }
+
+        [data-clinic-status] {
+            display: inline-flex;
+            align-items: center;
+            gap: .45rem;
+            min-height: 30px;
+            padding: .3rem .7rem !important;
+            border: 0 !important;
+            border-radius: 999px;
+            font-size: .72rem !important;
+            font-weight: 700;
+            font-variant-numeric: tabular-nums;
+            letter-spacing: .01em;
+        }
+
+        [data-clinic-status]::before {
+            width: .42rem;
+            height: .42rem;
+            border-radius: 50%;
+            background: #8491a1;
+            content: "";
+        }
+
+        [data-clinic-status].bg-emerald-950 {
+            color: #b9f1d8 !important;
+            background: #15362d !important;
+        }
+
+        [data-clinic-status].bg-emerald-950::before {
+            background: #56d49a;
+            box-shadow: 0 0 10px rgba(86, 212, 154, .7);
+        }
+
+        [data-clinic-status].bg-slate-800 {
+            color: #a9b5c3 !important;
+            background: #202a37 !important;
+        }
+
+        a[href^="tel:"]:not(.emergency-call) {
+            color: #fff !important;
+            background: #263545 !important;
+            border: 0 !important;
+            font-family: "Plus Jakarta Sans", "Noto Sans JP", sans-serif;
+            font-variant-numeric: tabular-nums;
+            font-weight: 700;
+            letter-spacing: .02em;
+            transition: background .24s var(--ease), transform .24s var(--ease);
+        }
+
+        a[href^="tel:"]:not(.emergency-call):hover {
+            background: #32465b !important;
+            transform: translateY(-1px);
+        }
+
+        #view-manual a[href^="https://www.google.com/maps"] {
+            color: #c6e4e6 !important;
+            background: #1a2834 !important;
+            border: 0 !important;
+        }
+
+        #view-manual a[href^="https://www.google.com/maps"]:hover {
+            background: #223744 !important;
+        }
+
+        #view-manual > .grid a {
+            border: 0 !important;
+            border-radius: 1.05rem;
+            box-shadow: 0 12px 32px rgba(0, 0, 0, .16);
+            transition: background .28s var(--ease), transform .28s var(--ease);
+        }
+
+        #view-manual > .grid a:hover {
+            transform: translateY(-2px);
+        }
+
+        .emergency-call {
+            min-height: 48px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: .65rem;
+            padding: .7rem 1rem;
+            border: 0;
+            border-radius: .9rem;
+            color: #fff;
+            background: linear-gradient(135deg, #bd2945, #8e1d37);
+            box-shadow: 0 8px 26px rgba(191, 32, 63, .22), inset 0 1px 0 rgba(255, 255, 255, .16);
+            font-size: .82rem;
+            font-weight: 750;
+            letter-spacing: .015em;
+            text-decoration: none;
+            white-space: nowrap;
+            transition: transform .24s var(--ease), box-shadow .24s var(--ease), background .24s var(--ease);
+        }
+
+        .emergency-call:hover {
+            color: #fff;
+            background: linear-gradient(135deg, #d52d4c, #a81e3e);
+            box-shadow: 0 11px 30px rgba(220, 38, 72, .3), inset 0 1px 0 rgba(255, 255, 255, .2);
+            transform: translateY(-1px);
+        }
+
+        .emergency-call-number {
+            font-family: "Plus Jakarta Sans", sans-serif;
+            font-size: 1.1rem;
+            font-weight: 800;
+            font-variant-numeric: tabular-nums;
+            letter-spacing: .04em;
+        }
+
+        .icon {
+            width: 1.1rem;
+            height: 1.1rem;
+            flex: 0 0 auto;
+            display: block;
+        }
+
+        .manual-chevron .icon {
+            width: 1.1rem;
+            height: 1.1rem;
+            transition: transform .36s var(--ease);
+        }
+
+        .manual-toggle[aria-expanded="true"] .manual-chevron .icon {
+            transform: rotate(180deg);
+        }
+
+        @media (max-width: 640px) {
+            html {
+                scroll-padding-top: 8.5rem;
+            }
+
+            header > div {
+                min-height: 64px;
+            }
+
+            header h1 {
+                max-width: 15rem;
+                font-size: .86rem !important;
+            }
+
+            header p {
+                max-width: 17rem;
+                font-size: .64rem !important;
+            }
+
+            nav[role="tablist"] {
+                top: 102px;
+            }
+
+            nav[role="tablist"] button {
+                padding-left: .5rem !important;
+                padding-right: .5rem !important;
+                font-size: .74rem !important;
+            }
+
+            main {
+                padding: 1rem .85rem 3rem !important;
+            }
+
+            #view-triage > div:first-child {
+                align-items: stretch;
+            }
+
+            #view-triage > div:first-child button {
+                align-self: flex-start;
+            }
+
+            #wizard-container button:not([onclick="prevStep()"]),
+            #result-container button:not([onclick="prevStep()"]) {
+                min-height: 72px;
+            }
+
+            .manual-toggle {
+                min-height: 68px;
+                padding: 1rem;
+            }
+
+            .manual-panel .grid.gap-3,
+            .manual-panel > .manual-panel-inner > .space-y-4 {
+                padding: .55rem .65rem .8rem !important;
+            }
+
+            .emergency-call {
+                gap: .45rem;
+                padding: .58rem .68rem;
+                font-size: .7rem;
+            }
+
+            .emergency-call-number {
+                font-size: .98rem;
+            }
+
+            .emergency-call .icon {
+                width: .95rem;
+                height: .95rem;
+            }
+        }
+
+        @media (max-width: 360px) {
+            nav[role="tablist"] {
+                top: 118px;
+            }
+        }
+
         @media (prefers-reduced-motion: reduce) {
-            .manual-panel,
-            .manual-chevron {
-                transition: none;
+            *, *::before, *::after {
+                scroll-behavior: auto !important;
+                animation-duration: .01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: .01ms !important;
+            }
+        }
+    </style>
+    <style>
+        :root {
+            color-scheme: dark;
+            --page: #09141b;
+            --surface: #111f27;
+            --surface-raised: #182a33;
+            --surface-inset: #0c171e;
+            --line: #2a3d45;
+            --text: #edf4f2;
+            --muted: #a9bbb9;
+            --subtle: #718783;
+            --accent: #82d8c8;
+            --danger: #ed5964;
+            --amber: #e7c77f;
+            --green: #83c9a7;
+            --ease: cubic-bezier(.2, .8, .2, 1);
+        }
+
+        html {
+            scroll-padding-top: 9rem;
+            background: var(--page);
+        }
+
+        body {
+            position: relative;
+            isolation: isolate;
+            color: var(--text) !important;
+            background-color: var(--page) !important;
+            background-image:
+                linear-gradient(90deg, transparent calc(50% - .5px), rgba(130, 216, 200, .035) 50%, transparent calc(50% + .5px)),
+                linear-gradient(180deg, #0d1b22 0, var(--page) 25rem) !important;
+            font-family: "Plus Jakarta Sans", "Noto Sans JP", sans-serif !important;
+            font-size: 15px;
+            line-height: 1.75;
+            letter-spacing: .005em;
+        }
+
+        body::before {
+            position: fixed;
+            z-index: -1;
+            inset: 0;
+            background: repeating-linear-gradient(0deg, transparent 0 79px, rgba(164, 198, 190, .018) 80px);
+            content: "";
+            pointer-events: none;
+        }
+
+        button, a {
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        button:focus-visible, a:focus-visible {
+            outline: 3px solid var(--accent);
+            outline-offset: 4px;
+        }
+
+        h1, h2, h3, h4 {
+            color: var(--text);
+            font-weight: 720 !important;
+            letter-spacing: -.025em;
+            line-height: 1.45;
+        }
+
+        p, li {
+            line-height: 1.78 !important;
+        }
+
+        strong {
+            font-weight: 700;
+        }
+
+        hr {
+            height: 1px;
+            border: 0;
+            background: var(--line);
+        }
+
+        .max-w-6xl {
+            max-width: 76rem;
+        }
+
+        header.sticky {
+            border-bottom: 1px solid var(--line) !important;
+            background: rgba(9, 20, 27, .96) !important;
+            box-shadow: none !important;
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+        }
+
+        header > div {
+            min-height: 76px;
+        }
+
+        header h1 {
+            font-size: 1rem !important;
+            font-weight: 700 !important;
+            letter-spacing: -.035em;
+        }
+
+        header p {
+            margin-top: .18rem;
+            color: var(--muted) !important;
+            font-size: .73rem !important;
+            line-height: 1.55 !important;
+        }
+
+        header p span {
+            color: #e3eeeb;
+            font-variant-numeric: tabular-nums;
+        }
+
+        .brand-mark {
+            width: 2.8rem;
+            height: 2.8rem;
+            flex: 0 0 2.8rem;
+            display: grid;
+            place-items: center;
+            border: 1px solid rgba(130, 216, 200, .36);
+            border-radius: .82rem;
+            color: var(--accent);
+            background: #10232a;
+        }
+
+        .brand-mark .icon {
+            width: 1.55rem;
+            height: 1.55rem;
+        }
+
+        nav[role="tablist"] {
+            top: 76px;
+            border-bottom: 1px solid var(--line) !important;
+            background: rgba(9, 20, 27, .94) !important;
+            box-shadow: none !important;
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+        }
+
+        nav[role="tablist"] > div {
+            gap: .45rem;
+            padding-top: .55rem;
+            padding-bottom: .55rem;
+        }
+
+        nav[role="tablist"] button {
+            min-height: 46px;
+            gap: .55rem;
+            border: 1px solid transparent;
+            border-radius: .65rem;
+            color: #a9bbb9;
+            background: transparent !important;
+            box-shadow: none !important;
+            font-size: .84rem !important;
+            font-weight: 650;
+            transition: color .2s ease, background .2s ease, border-color .2s ease;
+        }
+
+        nav[role="tablist"] button:hover {
+            color: var(--text);
+            background: rgba(255, 255, 255, .045) !important;
+        }
+
+        nav[role="tablist"] button[aria-selected="true"] {
+            color: var(--text);
+            border-color: #31464c;
+            background: #17272e !important;
+            box-shadow: inset 0 -2px 0 var(--accent) !important;
+        }
+
+        #tab-triage[aria-selected="true"] {
+            box-shadow: inset 0 -2px 0 var(--danger) !important;
+        }
+
+        .tab-icon {
+            width: 1.05rem;
+            height: 1.05rem;
+            color: var(--accent);
+        }
+
+        #tab-triage[aria-selected="true"] .tab-icon {
+            color: #ff8a91;
+        }
+
+        main {
+            max-width: 76rem !important;
+            padding-top: 1.8rem !important;
+            padding-bottom: 4.5rem !important;
+        }
+
+        #view-triage:not(.hidden),
+        #view-manual:not(.hidden) {
+            animation: panel-arrive .32s ease-out both;
+        }
+
+        @keyframes panel-arrive {
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        [class~="bg-slate-900"],
+        [class~="bg-slate-900/90"] {
+            background-color: var(--surface) !important;
+        }
+
+        [class~="bg-slate-950"] {
+            background-color: var(--surface-inset) !important;
+        }
+
+        [class~="bg-slate-800"],
+        [class~="bg-slate-700"] {
+            background-color: var(--surface-raised) !important;
+        }
+
+        body.bg-slate-950 {
+            background-color: var(--page) !important;
+        }
+
+        [class~="bg-red-950"] {
+            background: #321d25 !important;
+        }
+
+        [class~="bg-red-600"] {
+            background-color: #b93042 !important;
+        }
+
+        [class~="bg-amber-950"] {
+            background-color: #30291e !important;
+        }
+
+        [class~="bg-emerald-950"] {
+            background-color: #18302a !important;
+        }
+
+        [class~="bg-indigo-950"] {
+            background-color: #1b2b31 !important;
+        }
+
+        [class~="bg-gradient-to-r"] {
+            background-image: none !important;
+            background-color: var(--surface) !important;
+        }
+
+        [class*="border-"] {
+            border-color: var(--line) !important;
+        }
+
+        [class~="text-slate-100"],
+        [class~="text-white"] {
+            color: var(--text) !important;
+        }
+
+        [class~="text-slate-200"] {
+            color: #d0ddda !important;
+        }
+
+        [class~="text-slate-300"] {
+            color: var(--muted) !important;
+        }
+
+        [class~="text-slate-950"] {
+            color: #111d21 !important;
+        }
+
+        [class~="text-red-100"],
+        [class~="text-red-200"] {
+            color: #ffd9dc !important;
+        }
+
+        [class~="text-red-400"] {
+            color: #ff8991 !important;
+        }
+
+        [class~="text-amber-100"],
+        [class~="text-amber-200"] {
+            color: #f0dda9 !important;
+        }
+
+        [class~="text-emerald-100"],
+        [class~="text-emerald-200"] {
+            color: #b6e3cb !important;
+        }
+
+        #view-triage > div:first-child,
+        #view-manual > div:first-child {
+            padding: 1.15rem 1.35rem !important;
+            border: 1px solid var(--line) !important;
+            border-left: 3px solid var(--danger) !important;
+            border-radius: .8rem;
+            background: #101e25 !important;
+            box-shadow: none !important;
+        }
+
+        #view-manual > div:first-child {
+            border-left-color: var(--accent) !important;
+        }
+
+        #step-indicator-text {
+            color: #ff9299 !important;
+            font-size: .74rem;
+            font-weight: 700;
+            letter-spacing: .015em;
+            font-variant-numeric: tabular-nums;
+        }
+
+        #view-triage > div:first-child h2,
+        #view-manual > div:first-child h2 {
+            font-size: 1.12rem !important;
+        }
+
+        #view-triage > div:first-child button,
+        #wizard-container button[onclick="prevStep()"],
+        #result-container button[onclick="prevStep()"] {
+            min-height: 44px;
+            border: 1px solid #3a5057 !important;
+            border-radius: .6rem;
+            color: #d8e5e1 !important;
+            background: #1b2c33 !important;
+            box-shadow: none !important;
+            transition: background .2s ease, border-color .2s ease;
+        }
+
+        #view-triage > div:first-child button:hover,
+        #wizard-container button[onclick="prevStep()"]:hover,
+        #result-container button[onclick="prevStep()"]:hover {
+            border-color: #69817f !important;
+            background: #23383e !important;
+        }
+
+        #view-triage > .grid {
+            grid-template-columns: minmax(0, 1.7fr) minmax(17rem, .9fr);
+            align-items: start;
+            gap: 1.25rem !important;
+        }
+
+        #view-triage > .grid > div:first-child {
+            grid-column: auto !important;
+        }
+
+        #wizard-container > div,
+        #result-container > div {
+            padding: clamp(1.25rem, 3vw, 2rem) !important;
+            border: 1px solid #30454c !important;
+            border-radius: .9rem !important;
+            background: #111f27 !important;
+            box-shadow: 0 18px 42px rgba(0, 0, 0, .18) !important;
+        }
+
+        #wizard-container h2,
+        #result-container h2 {
+            font-size: clamp(1.25rem, 2.2vw, 1.65rem) !important;
+            letter-spacing: -.035em;
+        }
+
+        #wizard-container p,
+        #result-container li {
+            max-width: 72ch;
+        }
+
+        #wizard-container button:not([onclick="prevStep()"]),
+        #result-container button:not([onclick="prevStep()"]) {
+            min-height: 72px;
+            padding: 1rem 1.1rem !important;
+            border: 1px solid #344951 !important;
+            border-radius: .65rem !important;
+            background: #182a32 !important;
+            box-shadow: inset 3px 0 0 #536b70 !important;
+            transition: background .2s ease, border-color .2s ease, box-shadow .2s ease;
+        }
+
+        #wizard-container button:not([onclick="prevStep()"]):hover,
+        #result-container button:not([onclick="prevStep()"]):hover {
+            border-color: #58716f !important;
+            background: #20363c !important;
+            box-shadow: inset 3px 0 0 var(--accent) !important;
+        }
+
+        #wizard-container button[class~="bg-red-950"],
+        #result-container button[class~="bg-red-950"] {
+            border-color: #743540 !important;
+            background: #321d25 !important;
+            box-shadow: inset 3px 0 0 var(--danger) !important;
+        }
+
+        #wizard-container button[class~="bg-red-950"]:hover,
+        #result-container button[class~="bg-red-950"]:hover {
+            border-color: #a64c55 !important;
+            background: #42232d !important;
+        }
+
+        #wizard-container button[class~="bg-amber-950"] {
+            border-color: #665538 !important;
+            background: #30291e !important;
+            box-shadow: inset 3px 0 0 var(--amber) !important;
+        }
+
+        #wizard-container button[class~="bg-emerald-950"] {
+            border-color: #35594b !important;
+            background: #18302a !important;
+            box-shadow: inset 3px 0 0 var(--green) !important;
+        }
+
+        #result-container ol,
+        #result-container ul {
+            border: 1px solid var(--line) !important;
+            border-radius: .65rem;
+            background: var(--surface-inset) !important;
+        }
+
+        #result-container .text-xl + span {
+            border: 1px solid rgba(255, 255, 255, .18) !important;
+            box-shadow: none !important;
+        }
+
+        #view-triage > .grid > div:last-child {
+            gap: .8rem !important;
+        }
+
+        #view-triage > .grid > div:last-child > div {
+            padding: 1.1rem !important;
+            border: 1px solid var(--line) !important;
+            border-radius: .8rem;
+            background: #101e25 !important;
+            box-shadow: none !important;
+        }
+
+        #view-triage > .grid > div:last-child > div:last-child {
+            border-left: 3px solid var(--danger) !important;
+            background: #251a20 !important;
+        }
+
+        #view-triage > .grid > div:last-child h3 {
+            font-size: .91rem !important;
+            letter-spacing: -.01em;
+        }
+
+        #view-triage > .grid > div:last-child > div:first-child > div > div {
+            min-height: 2.7rem;
+            border: 1px solid var(--line) !important;
+            border-radius: .55rem;
+            background: #17272d !important;
+        }
+
+        #view-manual > div:first-child p {
+            max-width: 76ch;
+        }
+
+        #view-manual > .space-y-3 {
+            display: grid;
+            gap: .55rem !important;
+        }
+
+        #view-manual article {
+            border: 1px solid var(--line) !important;
+            border-radius: .75rem !important;
+            background: #101d24 !important;
+            box-shadow: none !important;
+        }
+
+        .manual-toggle {
+            min-height: 68px;
+            padding: 1rem 1.2rem;
+            border: 0 !important;
+            border-radius: .7rem;
+            color: var(--text);
+            background: transparent !important;
+            text-align: left;
+            transition: color .2s ease, background .2s ease;
+        }
+
+        .manual-toggle:hover,
+        .manual-toggle[aria-expanded="true"] {
+            background: #172830 !important;
+        }
+
+        .manual-toggle > span:first-child {
+            font-size: 1rem !important;
+            font-weight: 700;
+            letter-spacing: -.015em;
+        }
+
+        .manual-chevron {
+            width: 2rem;
+            height: 2rem;
+            flex: 0 0 2rem;
+            display: grid;
+            place-items: center;
+            border: 1px solid #344951;
+            border-radius: .55rem;
+            color: #b5c8c3;
+            background: #16272e;
+            transition: color .25s ease, background .25s ease, transform .3s var(--ease);
+        }
+
+        .manual-toggle[aria-expanded="true"] .manual-chevron {
+            color: var(--accent);
+            border-color: #456a68;
+            background: #1b3738;
+        }
+
+        .manual-panel {
+            display: grid;
+            grid-template-rows: 0fr;
+            transition: grid-template-rows .35s var(--ease);
+        }
+
+        .manual-panel.is-open {
+            grid-template-rows: 1fr;
+        }
+
+        .manual-panel-inner {
+            min-height: 0;
+            overflow: hidden;
+        }
+
+        .manual-panel .grid.gap-3,
+        .manual-panel > .manual-panel-inner > .space-y-4 {
+            gap: .6rem !important;
+            padding: .2rem 1.05rem 1.05rem !important;
+        }
+
+        .manual-panel .grid.gap-3 > div,
+        .manual-panel .space-y-4 > div {
+            padding: 1rem 1.15rem !important;
+            border: 0 !important;
+            border-left: 2px solid #4d7775 !important;
+            border-radius: .2rem .55rem .55rem .2rem;
+            background: #14232a !important;
+        }
+
+        .manual-panel .grid.gap-3 > div:nth-child(2) {
+            border-left-color: #5da987 !important;
+        }
+
+        .manual-panel .grid.gap-3 > div:nth-child(3) {
+            border-left-color: #b99959 !important;
+        }
+
+        .manual-panel h4 {
+            margin-bottom: .35rem;
+            font-size: .88rem;
+            letter-spacing: -.01em;
+        }
+
+        [data-clinic-id] {
+            padding: 1.1rem !important;
+            border: 1px solid #30434a !important;
+            border-radius: .7rem !important;
+            background: #14232a !important;
+            transition: border-color .2s ease, background .2s ease;
+        }
+
+        [data-clinic-id]:hover {
+            border-color: #58716f !important;
+            background: #192b31 !important;
+        }
+
+        [data-clinic-id] p,
+        #result-container li {
+            font-variant-numeric: tabular-nums;
+        }
+
+        [data-clinic-status] {
+            min-height: 28px;
+            padding: .25rem .65rem !important;
+            border: 1px solid transparent !important;
+            border-radius: .45rem;
+            font-size: .72rem !important;
+            font-weight: 700;
+            font-variant-numeric: tabular-nums;
+        }
+
+        [data-clinic-status]::before {
+            width: .42rem;
+            height: .42rem;
+            border-radius: 50%;
+            background: #8491a1;
+            content: "";
+        }
+
+        [data-clinic-status].bg-emerald-950 {
+            color: #b9efd4 !important;
+            border-color: #35594b !important;
+            background: #18302a !important;
+        }
+
+        [data-clinic-status].bg-emerald-950::before {
+            background: #70d4a3;
+        }
+
+        [data-clinic-status].bg-slate-800 {
+            color: #b4c2c0 !important;
+            border-color: #384b52 !important;
+            background: #1b2a30 !important;
+        }
+
+        a[href^="tel:"]:not(.emergency-call) {
+            min-height: 42px;
+            border: 1px solid #425961 !important;
+            border-radius: .55rem !important;
+            color: var(--text) !important;
+            background: #20343b !important;
+            font-family: "Plus Jakarta Sans", "Noto Sans JP", sans-serif;
+            font-variant-numeric: tabular-nums;
+            font-weight: 700;
+            transition: background .2s ease, border-color .2s ease;
+        }
+
+        a[href^="tel:"]:not(.emergency-call):hover {
+            border-color: #64817e !important;
+            background: #29444a !important;
+        }
+
+        #view-manual a[href^="https://www.google.com/maps"] {
+            color: #d1e9e3 !important;
+            border: 1px solid #34504e !important;
+            border-radius: .55rem !important;
+            background: #1a3033 !important;
+        }
+
+        #view-manual a[href^="https://www.google.com/maps"]:hover {
+            background: #23403f !important;
+        }
+
+        #view-manual > .grid a {
+            border: 1px solid var(--line) !important;
+            border-radius: .75rem;
+            background: #111f27 !important;
+            box-shadow: none !important;
+            transition: border-color .2s ease, background .2s ease;
+        }
+
+        #view-manual > .grid a:hover {
+            border-color: #58716f !important;
+            background: #172830 !important;
+        }
+
+        .emergency-call {
+            min-height: 48px;
+            gap: .55rem;
+            padding: .65rem .9rem;
+            border: 1px solid #f17b82;
+            border-radius: .65rem;
+            color: #fff;
+            background: #b93042;
+            box-shadow: none;
+            font-size: .82rem;
+            font-weight: 700;
+            text-decoration: none;
+            white-space: nowrap;
+            transition: background .2s ease, border-color .2s ease;
+        }
+
+        .emergency-call:hover {
+            color: #fff;
+            border-color: #ffa0a3;
+            background: #cc3a4b;
+            box-shadow: none;
+        }
+
+        .emergency-call-number {
+            font-family: "Plus Jakarta Sans", sans-serif;
+            font-size: 1.1rem;
+            font-weight: 800;
+            font-variant-numeric: tabular-nums;
+            letter-spacing: .035em;
+        }
+
+        .icon {
+            width: 1.1rem;
+            height: 1.1rem;
+            flex: 0 0 auto;
+            display: block;
+        }
+
+        .manual-chevron .icon {
+            width: 1.05rem;
+            height: 1.05rem;
+        }
+
+        @media (max-width: 760px) {
+            html {
+                scroll-padding-top: 9rem;
+            }
+
+            header > div {
+                min-height: 68px;
+            }
+
+            header h1 {
+                font-size: .88rem !important;
+            }
+
+            header p {
+                max-width: 23rem;
+                font-size: .65rem !important;
+            }
+
+            nav[role="tablist"] {
+                top: 68px;
+            }
+
+            nav[role="tablist"] button {
+                padding-left: .55rem !important;
+                padding-right: .55rem !important;
+                font-size: .76rem !important;
+            }
+
+            main {
+                padding: 1.15rem .9rem 3.25rem !important;
+            }
+
+            #view-triage > .grid {
+                grid-template-columns: minmax(0, 1fr);
+            }
+
+            #view-triage > .grid > div:first-child {
+                grid-column: auto !important;
+            }
+
+            #view-triage > div:first-child {
+                align-items: stretch;
+            }
+
+            #view-triage > div:first-child button {
+                align-self: flex-start;
+            }
+        }
+
+        @media (max-width: 480px) {
+            header > div {
+                align-items: flex-start;
+                gap: .5rem;
+                padding-top: .65rem;
+                padding-bottom: .65rem;
+            }
+
+            header > div > div:first-child {
+                gap: .55rem;
+            }
+
+            .brand-mark {
+                width: 2.35rem;
+                height: 2.35rem;
+                flex-basis: 2.35rem;
+                margin-top: .1rem;
+            }
+
+            header h1 {
+                max-width: 13.5rem;
+                font-size: .8rem !important;
+            }
+
+            header p {
+                max-width: 15rem;
+                font-size: .6rem !important;
+            }
+
+            .emergency-call {
+                min-height: 42px;
+                gap: .3rem;
+                padding: .45rem .55rem;
+                font-size: .64rem;
+            }
+
+            .emergency-call-number {
+                font-size: .92rem;
+            }
+
+            .emergency-call .icon {
+                width: .9rem;
+                height: .9rem;
+            }
+
+            nav[role="tablist"] {
+                top: 138px;
+            }
+
+            nav[role="tablist"] > div {
+                padding-right: .6rem;
+                padding-left: .6rem;
+            }
+
+            nav[role="tablist"] button {
+                gap: .35rem;
+                font-size: .7rem !important;
+            }
+
+            .tab-icon {
+                width: .9rem;
+                height: .9rem;
+            }
+
+            #wizard-container button:not([onclick="prevStep()"]),
+            #result-container button:not([onclick="prevStep()"]) {
+                min-height: 68px;
+            }
+
+            .manual-toggle {
+                min-height: 64px;
+                padding: .85rem .9rem;
+            }
+
+            .manual-panel .grid.gap-3,
+            .manual-panel > .manual-panel-inner > .space-y-4 {
+                padding: .1rem .7rem .8rem !important;
+            }
+        }
+
+        @media (max-width: 360px) {
+            html {
+                scroll-padding-top: 15rem;
+            }
+
+            nav[role="tablist"] {
+                top: 156px;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                scroll-behavior: auto !important;
+                animation-duration: .01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: .01ms !important;
             }
         }
     </style>
@@ -102,6 +1546,12 @@
     <header class="sticky top-0 z-50 bg-slate-900/95 backdrop-blur border-b border-slate-800 px-4 py-3 shadow-xl">
         <div class="max-w-6xl mx-auto flex items-center justify-between gap-4">
             <div class="flex items-center gap-3">
+                <div class="brand-mark" aria-hidden="true">
+                    <svg class="icon" viewBox="0 0 32 32" fill="none">
+                        <path d="M6 25V9m20 16V9M6 14h20M6 20h20" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+                        <circle cx="16" cy="7" r="2" fill="#ed5964"/>
+                    </svg>
+                </div>
                 <div>
                     <h1 class="text-sm sm:text-lg font-bold tracking-wider text-slate-100">
                         体操部 けが・急病の対応ナビ
@@ -109,6 +1559,13 @@
                     <p class="text-xs text-slate-300">通報時の住所: <span class="font-semibold">〒739-0046 広島県東広島市1丁目1 北体育館 1階体操場</span></p>
                 </div>
             </div>
+            <a class="emergency-call" href="tel:119" aria-label="119番に緊急通報する">
+                <svg class="icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                    <path d="M7.1 3.8 9.5 7.5 7.9 9.1c1.1 2.3 2.8 4 5.1 5.1l1.6-1.6 3.7 2.4-.8 4c-.1.6-.7 1-1.3.9C9.4 19 5 14.6 4.1 7.8c-.1-.6.3-1.2.9-1.3l2.1-.4Z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <span class="emergency-call-number">119</span>
+                <span>緊急通報</span>
+            </a>
         </div>
     </header>
 
@@ -116,9 +1573,11 @@
     <nav role="tablist" aria-label="対応画面" class="bg-slate-900/95 border-b border-slate-800 sticky top-[69px] z-40 backdrop-blur">
         <div class="max-w-6xl mx-auto px-4 py-2 flex gap-2">
             <button onclick="switchTab('triage')" id="tab-triage" role="tab" aria-controls="view-triage" aria-selected="true" class="flex-1 min-w-0 px-2 sm:flex-none sm:px-6 py-2.5 rounded-xl text-xs sm:text-sm leading-tight font-bold transition-all text-center flex items-center justify-center gap-2 bg-red-600 text-white shadow-lg">
+                <svg class="icon tab-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 3.5 20 7v5.3c0 4.4-3 7.3-8 9.2-5-1.9-8-4.8-8-9.2V7l8-3.5Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="m8.5 12.2 2.2 2.2 4.8-5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
                 緊急時の状態<br class="sm:hidden">チェック
             </button>
             <button onclick="switchTab('manual')" id="tab-manual" role="tab" aria-controls="view-manual" aria-selected="false" class="flex-1 min-w-0 px-2 sm:flex-none sm:px-6 py-2.5 rounded-xl text-xs sm:text-sm leading-tight font-bold transition-all text-center flex items-center justify-center gap-2 bg-slate-800 text-slate-300 hover:text-white hover:bg-slate-700">
+                <svg class="icon tab-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 4.5h12a1.5 1.5 0 0 1 1.5 1.5v13a1 1 0 0 1-1 1H7a2.5 2.5 0 0 1-2.5-2.5V6A1.5 1.5 0 0 1 6 4.5Z" stroke="currentColor" stroke-width="1.7"/><path d="M8 9h8M8 13h8M8 17h5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
                 事故対応<br class="sm:hidden">マニュアル
             </button>
         </div>
@@ -205,7 +1664,7 @@
                     <h3>
                         <button class="manual-toggle" type="button" aria-expanded="false" aria-controls="manual-panel-concussion" onclick="toggleManual(this)">
                             <span class="text-base sm:text-lg font-bold">脳震盪（のうしんとう）</span>
-                            <span class="manual-chevron" aria-hidden="true">⌄</span>
+                            <span class="manual-chevron" aria-hidden="true"><svg class="icon" viewBox="0 0 24 24" fill="none"><path d="m6 9 6 6 6-6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
                         </button>
                     </h3>
                     <div class="manual-panel" id="manual-panel-concussion" aria-hidden="true" inert>
@@ -232,7 +1691,7 @@
                     <h3>
                         <button class="manual-toggle" type="button" aria-expanded="false" aria-controls="manual-panel-cervical" onclick="toggleManual(this)">
                             <span class="text-base sm:text-lg font-bold">頸椎損傷（けいついそんしょう）</span>
-                            <span class="manual-chevron" aria-hidden="true">⌄</span>
+                            <span class="manual-chevron" aria-hidden="true"><svg class="icon" viewBox="0 0 24 24" fill="none"><path d="m6 9 6 6 6-6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
                         </button>
                     </h3>
                     <div class="manual-panel" id="manual-panel-cervical" aria-hidden="true" inert>
@@ -259,7 +1718,7 @@
                     <h3>
                         <button class="manual-toggle" type="button" aria-expanded="false" aria-controls="manual-panel-fracture" onclick="toggleManual(this)">
                             <span class="text-base sm:text-lg font-bold">骨折</span>
-                            <span class="manual-chevron" aria-hidden="true">⌄</span>
+                            <span class="manual-chevron" aria-hidden="true"><svg class="icon" viewBox="0 0 24 24" fill="none"><path d="m6 9 6 6 6-6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
                         </button>
                     </h3>
                     <div class="manual-panel" id="manual-panel-fracture" aria-hidden="true" inert>
@@ -286,7 +1745,7 @@
                     <h3>
                         <button class="manual-toggle" type="button" aria-expanded="false" aria-controls="manual-panel-dislocation" onclick="toggleManual(this)">
                             <span class="text-base sm:text-lg font-bold">脱臼（だっきゅう）</span>
-                            <span class="manual-chevron" aria-hidden="true">⌄</span>
+                            <span class="manual-chevron" aria-hidden="true"><svg class="icon" viewBox="0 0 24 24" fill="none"><path d="m6 9 6 6 6-6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
                         </button>
                     </h3>
                     <div class="manual-panel" id="manual-panel-dislocation" aria-hidden="true" inert>
@@ -313,7 +1772,7 @@
                     <h3>
                         <button class="manual-toggle" type="button" aria-expanded="false" aria-controls="manual-panel-sprain" onclick="toggleManual(this)">
                             <span class="text-base sm:text-lg font-bold">捻挫（ねんざ）</span>
-                            <span class="manual-chevron" aria-hidden="true">⌄</span>
+                            <span class="manual-chevron" aria-hidden="true"><svg class="icon" viewBox="0 0 24 24" fill="none"><path d="m6 9 6 6 6-6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
                         </button>
                     </h3>
                     <div class="manual-panel" id="manual-panel-sprain" aria-hidden="true" inert>
@@ -340,7 +1799,7 @@
                     <h3>
                         <button class="manual-toggle" type="button" aria-expanded="false" aria-controls="manual-panel-strain" onclick="toggleManual(this)">
                             <span class="text-base sm:text-lg font-bold">肉離れ</span>
-                            <span class="manual-chevron" aria-hidden="true">⌄</span>
+                            <span class="manual-chevron" aria-hidden="true"><svg class="icon" viewBox="0 0 24 24" fill="none"><path d="m6 9 6 6 6-6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
                         </button>
                     </h3>
                     <div class="manual-panel" id="manual-panel-strain" aria-hidden="true" inert>
@@ -369,7 +1828,7 @@
                 <h3>
                     <button class="manual-toggle" type="button" aria-expanded="false" aria-controls="clinic-panel" onclick="toggleManual(this)">
                         <span class="text-base sm:text-lg font-bold">近隣の整形外科一覧</span>
-                        <span class="manual-chevron" aria-hidden="true">⌄</span>
+                        <span class="manual-chevron" aria-hidden="true"><svg class="icon" viewBox="0 0 24 24" fill="none"><path d="m6 9 6 6 6-6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
                     </button>
                 </h3>
                 <div class="manual-panel" id="clinic-panel" aria-hidden="true" inert>
@@ -394,7 +1853,7 @@
                                     <p class="mt-1 text-sm leading-relaxed text-slate-300">〒739-0021 広島県東広島市西条町助実1182-1</p>
                                     <div class="mt-3 flex flex-wrap gap-2">
                                         <a class="inline-flex items-center justify-center rounded-lg border border-slate-600 bg-slate-800 px-3 py-2 text-sm font-semibold text-slate-100 hover:bg-slate-700" href="tel:0824226000">電話 082-422-6000</a>
-                                        <a class="inline-flex items-center justify-center rounded-lg border border-indigo-500/60 bg-indigo-950 px-3 py-2 text-sm font-semibold text-indigo-100 hover:bg-indigo-900" href="https://www.google.com/maps/search/?api=1&amp;query=%E3%81%AE%E3%81%9E%E3%81%BF%E6%95%B4%E5%BD%A2%E5%A4%96%E7%A7%91%E3%82%AF%E3%83%AA%E3%83%8B%E3%83%83%E3%82%AF%E8%A5%BF%E6%9D%A1%20%E3%80%92739-0021%20%E5%BA%83%E5%B3%B6%E7%9C%8C%E6%9D%B1%E5%BA%83%E5%B3%B6%E5%B8%82%E8%A5%BF%E6%9D%A1%E7%94%BA%E5%8A%A9%E5%AE%9F1182-1" target="_blank" rel="noopener noreferrer">Googleマップで開く ↗</a>
+                                        <a class="inline-flex items-center justify-center rounded-lg border border-indigo-500/60 bg-indigo-950 px-3 py-2 text-sm font-semibold text-indigo-100 hover:bg-indigo-900" href="https://www.google.com/maps/search/?api=1&amp;query=%E3%81%AE%E3%81%9E%E3%81%BF%E6%95%B4%E5%BD%A2%E5%A4%96%E7%A7%91%E3%82%AF%E3%83%AA%E3%83%8B%E3%83%83%E3%82%AF%E8%A5%BF%E6%9D%A1%20%E3%80%92739-0021%20%E5%BA%83%E5%B3%B6%E7%9C%8C%E6%9D%B1%E5%BA%83%E5%B3%B6%E5%B8%82%E8%A5%BF%E6%9D%A1%E7%94%BA%E5%8A%A9%E5%AE%9F1182-1" target="_blank" rel="noopener noreferrer">Googleマップで開く <svg class="icon external-link-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M14 5h5v5M19 5l-9 9" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M18 13v5a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></a>
                                     </div>
                                 </article>
 
@@ -407,7 +1866,7 @@
                                     <p class="mt-1 text-sm leading-relaxed text-slate-300">〒739-0041 広島県東広島市西条町寺家4720</p>
                                     <div class="mt-3 flex flex-wrap gap-2">
                                         <a class="inline-flex items-center justify-center rounded-lg border border-slate-600 bg-slate-800 px-3 py-2 text-sm font-semibold text-slate-100 hover:bg-slate-700" href="tel:0824240009">電話 082-424-0009</a>
-                                        <a class="inline-flex items-center justify-center rounded-lg border border-indigo-500/60 bg-indigo-950 px-3 py-2 text-sm font-semibold text-indigo-100 hover:bg-indigo-900" href="https://www.google.com/maps/search/?api=1&amp;query=%E3%81%AE%E3%81%9E%E3%81%BF%E6%95%B4%E5%BD%A2%E5%A4%96%E7%A7%91%E3%82%AF%E3%83%AA%E3%83%8B%E3%83%83%E3%82%AF%E5%AF%BA%E5%AE%B6%20%E3%80%92739-0041%20%E5%BA%83%E5%B3%B6%E7%9C%8C%E6%9D%B1%E5%BA%83%E5%B3%B6%E5%B8%82%E8%A5%BF%E6%9D%A1%E7%94%BA%E5%AF%BA%E5%AE%B64720" target="_blank" rel="noopener noreferrer">Googleマップで開く ↗</a>
+                                        <a class="inline-flex items-center justify-center rounded-lg border border-indigo-500/60 bg-indigo-950 px-3 py-2 text-sm font-semibold text-indigo-100 hover:bg-indigo-900" href="https://www.google.com/maps/search/?api=1&amp;query=%E3%81%AE%E3%81%9E%E3%81%BF%E6%95%B4%E5%BD%A2%E5%A4%96%E7%A7%91%E3%82%AF%E3%83%AA%E3%83%8B%E3%83%83%E3%82%AF%E5%AF%BA%E5%AE%B6%20%E3%80%92739-0041%20%E5%BA%83%E5%B3%B6%E7%9C%8C%E6%9D%B1%E5%BA%83%E5%B3%B6%E5%B8%82%E8%A5%BF%E6%9D%A1%E7%94%BA%E5%AF%BA%E5%AE%B64720" target="_blank" rel="noopener noreferrer">Googleマップで開く <svg class="icon external-link-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M14 5h5v5M19 5l-9 9" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M18 13v5a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></a>
                                     </div>
                                 </article>
 
@@ -420,7 +1879,7 @@
                                     <p class="mt-1 text-sm leading-relaxed text-slate-300">〒739-0041 広島県東広島市西条町寺家5284-1</p>
                                     <div class="mt-3 flex flex-wrap gap-2">
                                         <a class="inline-flex items-center justify-center rounded-lg border border-slate-600 bg-slate-800 px-3 py-2 text-sm font-semibold text-slate-100 hover:bg-slate-700" href="tel:0824938130">電話 082-493-8130</a>
-                                        <a class="inline-flex items-center justify-center rounded-lg border border-indigo-500/60 bg-indigo-950 px-3 py-2 text-sm font-semibold text-indigo-100 hover:bg-indigo-900" href="https://www.google.com/maps/search/?api=1&amp;query=%E3%81%86%E3%81%9F%E3%81%AE%E3%81%AF%E3%82%89%E6%95%B4%E5%BD%A2%E5%A4%96%E7%A7%91%E3%82%AF%E3%83%AA%E3%83%8B%E3%83%83%E3%82%AF%20%E3%80%92739-0041%20%E5%BA%83%E5%B3%B6%E7%9C%8C%E6%9D%B1%E5%BA%83%E5%B3%B6%E5%B8%82%E8%A5%BF%E6%9D%A1%E7%94%BA%E5%AF%BA%E5%AE%B65284-1" target="_blank" rel="noopener noreferrer">Googleマップで開く ↗</a>
+                                        <a class="inline-flex items-center justify-center rounded-lg border border-indigo-500/60 bg-indigo-950 px-3 py-2 text-sm font-semibold text-indigo-100 hover:bg-indigo-900" href="https://www.google.com/maps/search/?api=1&amp;query=%E3%81%86%E3%81%9F%E3%81%AE%E3%81%AF%E3%82%89%E6%95%B4%E5%BD%A2%E5%A4%96%E7%A7%91%E3%82%AF%E3%83%AA%E3%83%8B%E3%83%83%E3%82%AF%20%E3%80%92739-0041%20%E5%BA%83%E5%B3%B6%E7%9C%8C%E6%9D%B1%E5%BA%83%E5%B3%B6%E5%B8%82%E8%A5%BF%E6%9D%A1%E7%94%BA%E5%AF%BA%E5%AE%B65284-1" target="_blank" rel="noopener noreferrer">Googleマップで開く <svg class="icon external-link-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M14 5h5v5M19 5l-9 9" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M18 13v5a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></a>
                                     </div>
                                 </article>
 
@@ -433,7 +1892,7 @@
                                     <p class="mt-1 text-sm leading-relaxed text-slate-300">〒739-0041 広島県東広島市西条町寺家1633</p>
                                     <div class="mt-3 flex flex-wrap gap-2">
                                         <a class="inline-flex items-center justify-center rounded-lg border border-slate-600 bg-slate-800 px-3 py-2 text-sm font-semibold text-slate-100 hover:bg-slate-700" href="tel:0824235885">電話 082-423-5885</a>
-                                        <a class="inline-flex items-center justify-center rounded-lg border border-indigo-500/60 bg-indigo-950 px-3 py-2 text-sm font-semibold text-indigo-100 hover:bg-indigo-900" href="https://www.google.com/maps/search/?api=1&amp;query=%E3%81%8A%E3%81%8A%E3%82%82%E3%82%8A%E6%95%B4%E5%BD%A2%E5%A4%96%E7%A7%91%20%E3%80%92739-0041%20%E5%BA%83%E5%B3%B6%E7%9C%8C%E6%9D%B1%E5%BA%83%E5%B3%B6%E5%B8%82%E8%A5%BF%E6%9D%A1%E7%94%BA%E5%AF%BA%E5%AE%B61633" target="_blank" rel="noopener noreferrer">Googleマップで開く ↗</a>
+                                        <a class="inline-flex items-center justify-center rounded-lg border border-indigo-500/60 bg-indigo-950 px-3 py-2 text-sm font-semibold text-indigo-100 hover:bg-indigo-900" href="https://www.google.com/maps/search/?api=1&amp;query=%E3%81%8A%E3%81%8A%E3%82%82%E3%82%8A%E6%95%B4%E5%BD%A2%E5%A4%96%E7%A7%91%20%E3%80%92739-0041%20%E5%BA%83%E5%B3%B6%E7%9C%8C%E6%9D%B1%E5%BA%83%E5%B3%B6%E5%B8%82%E8%A5%BF%E6%9D%A1%E7%94%BA%E5%AF%BA%E5%AE%B61633" target="_blank" rel="noopener noreferrer">Googleマップで開く <svg class="icon external-link-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M14 5h5v5M19 5l-9 9" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M18 13v5a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></a>
                                     </div>
                                 </article>
 
@@ -446,7 +1905,7 @@
                                     <p class="mt-1 text-sm leading-relaxed text-slate-300">〒739-0042 広島県東広島市西条町西条東1283-2</p>
                                     <div class="mt-3 flex flex-wrap gap-2">
                                         <a class="inline-flex items-center justify-center rounded-lg border border-slate-600 bg-slate-800 px-3 py-2 text-sm font-semibold text-slate-100 hover:bg-slate-700" href="tel:0824222156">電話 082-422-2156</a>
-                                        <a class="inline-flex items-center justify-center rounded-lg border border-indigo-500/60 bg-indigo-950 px-3 py-2 text-sm font-semibold text-indigo-100 hover:bg-indigo-900" href="https://www.google.com/maps/search/?api=1&amp;query=%E5%9C%9F%E8%82%A5%E6%95%B4%E5%BD%A2%E5%A4%96%E7%A7%91%E7%97%85%E9%99%A2%20%E3%80%92739-0042%20%E5%BA%83%E5%B3%B6%E7%9C%8C%E6%9D%B1%E5%BA%83%E5%B3%B6%E5%B8%82%E8%A5%BF%E6%9D%A1%E7%94%BA%E8%A5%BF%E6%9D%B11283-2" target="_blank" rel="noopener noreferrer">Googleマップで開く ↗</a>
+                                        <a class="inline-flex items-center justify-center rounded-lg border border-indigo-500/60 bg-indigo-950 px-3 py-2 text-sm font-semibold text-indigo-100 hover:bg-indigo-900" href="https://www.google.com/maps/search/?api=1&amp;query=%E5%9C%9F%E8%82%A5%E6%95%B4%E5%BD%A2%E5%A4%96%E7%A7%91%E7%97%85%E9%99%A2%20%E3%80%92739-0042%20%E5%BA%83%E5%B3%B6%E7%9C%8C%E6%9D%B1%E5%BA%83%E5%B3%B6%E5%B8%82%E8%A5%BF%E6%9D%A1%E7%94%BA%E8%A5%BF%E6%9D%B11283-2" target="_blank" rel="noopener noreferrer">Googleマップで開く <svg class="icon external-link-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M14 5h5v5M19 5l-9 9" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M18 13v5a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></a>
                                     </div>
                                 </article>
 
@@ -459,7 +1918,7 @@
                                     <p class="mt-1 text-sm leading-relaxed text-slate-300">〒739-0024 広島県東広島市西条町御薗宇4281-1</p>
                                     <div class="mt-3 flex flex-wrap gap-2">
                                         <a class="inline-flex items-center justify-center rounded-lg border border-slate-600 bg-slate-800 px-3 py-2 text-sm font-semibold text-slate-100 hover:bg-slate-700" href="tel:0824313500">電話 082-431-3500</a>
-                                        <a class="inline-flex items-center justify-center rounded-lg border border-indigo-500/60 bg-indigo-950 px-3 py-2 text-sm font-semibold text-indigo-100 hover:bg-indigo-900" href="https://www.google.com/maps/search/?api=1&amp;query=%E6%9D%B1%E5%BA%83%E5%B3%B6%E6%95%B4%E5%BD%A2%E5%A4%96%E7%A7%91%E3%82%AF%E3%83%AA%E3%83%8B%E3%83%83%E3%82%AF%20%E3%80%92739-0024%20%E5%BA%83%E5%B3%B6%E7%9C%8C%E6%9D%B1%E5%BA%83%E5%B3%B6%E5%B8%82%E8%A5%BF%E6%9D%A1%E7%94%BA%E5%BE%A1%E8%96%97%E5%AE%874281-1" target="_blank" rel="noopener noreferrer">Googleマップで開く ↗</a>
+                                        <a class="inline-flex items-center justify-center rounded-lg border border-indigo-500/60 bg-indigo-950 px-3 py-2 text-sm font-semibold text-indigo-100 hover:bg-indigo-900" href="https://www.google.com/maps/search/?api=1&amp;query=%E6%9D%B1%E5%BA%83%E5%B3%B6%E6%95%B4%E5%BD%A2%E5%A4%96%E7%A7%91%E3%82%AF%E3%83%AA%E3%83%8B%E3%83%83%E3%82%AF%20%E3%80%92739-0024%20%E5%BA%83%E5%B3%B6%E7%9C%8C%E6%9D%B1%E5%BA%83%E5%B3%B6%E5%B8%82%E8%A5%BF%E6%9D%A1%E7%94%BA%E5%BE%A1%E8%96%97%E5%AE%874281-1" target="_blank" rel="noopener noreferrer">Googleマップで開く <svg class="icon external-link-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M14 5h5v5M19 5l-9 9" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M18 13v5a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></a>
                                     </div>
                                 </article>
                             </div>
@@ -475,7 +1934,7 @@
                             <span class="block text-sm sm:text-base font-bold text-indigo-100">日本体操協会 公式安全対策・事故対応動画（外部サイト）</span>
                             <span class="mt-2 block text-sm leading-relaxed text-slate-300">心停止の対処・外傷対応・搬送が必要な場合の公式解説動画をまとめて視聴できます</span>
                         </span>
-                        <span class="pt-1 text-indigo-200" aria-hidden="true">↗</span>
+                        <span class="pt-1 text-indigo-200" aria-hidden="true"><svg class="icon external-link-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M14 5h5v5M19 5l-9 9" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M18 13v5a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></span>
                     </span>
                 </a>
                 <a href="https://www.fukuda.co.jp/aed/about/howtouse/" target="_blank" rel="noopener noreferrer" class="block min-h-20 rounded-2xl border border-indigo-400/50 bg-gradient-to-r from-indigo-950 to-slate-900 p-4 sm:p-5 shadow-lg transition hover:border-indigo-300 hover:bg-indigo-950">
@@ -484,7 +1943,7 @@
                             <span class="block text-sm sm:text-base font-bold text-indigo-100">AEDの使い方・心肺蘇生法（フクダ電子 公式サイト）</span>
                             <span class="mt-2 block text-sm leading-relaxed text-slate-300">AEDが届くまでの対応動画と、胸骨圧迫（心肺蘇生）・AED使用手順を確認できます</span>
                         </span>
-                        <span class="pt-1 text-indigo-200" aria-hidden="true">↗</span>
+                        <span class="pt-1 text-indigo-200" aria-hidden="true"><svg class="icon external-link-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M14 5h5v5M19 5l-9 9" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M18 13v5a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></span>
                     </span>
                 </a>
             </div>
